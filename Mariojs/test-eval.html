@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+<body>
+<div id="output"></div>
+<script src="sprites.js"></script>
+<script src="utility.js"></script>
+<script src="things.js"></script>
+<script src="maps.js"></script>
+<script>
+window.gamescreen = { width: 800, height: 600 };
+window.unitsize = 4;
+window.innerWidth = 800;
+window.innerHeight = 600;
+window.timer = 1;
+window.map = { jumpmod: 1 };
+window.AudioPlayer = { playTheme: function(){} };
+window.gameon = true;
+
+try {
+  let newmap = { areas: [] };
+  World44(newmap);
+  window.map = newmap;
+  window.area = newmap.area = newmap.areas[0];
+  newmap.areas[0].creation();
+  if (newmap.areas[0].sections && newmap.areas[0].sections[0]) {
+      setBStretch();
+      newmap.areas[0].sections[0](newmap.areas[0].sections.start);
+  }
+  document.getElementById("output").innerText = "SUCCESS 4-4";
+} catch(e) {
+  document.getElementById("output").innerText = "ERROR: " + e.message + "\n" + e.stack;
+}
+</script>
+</body>
+</html>

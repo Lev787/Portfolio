@@ -1,0 +1,1287 @@
+<!DOCTYPE HTML>
+<html lang="en-us">
+<head>
+  <meta charset="utf-8">
+  <title>Super Mario Bros</title>
+  <style>
+    body { 
+      margin: 0; 
+      padding: 0; 
+      background: #5c94fc; 
+      overflow: hidden; 
+      width: 100vw;
+      height: 100vh;
+      font-family: inherit;
+    }
+    
+    @font-face {
+      font-family: "Super Plumber Bros";
+      src: url("Fonts/super_plumber_brothers.ttf");
+    }
+
+    /* Iframe runs beneath the main menu now, so it computes size accurately */
+    iframe { 
+      position: absolute; 
+      border: 0; 
+      top: 0; 
+      left: 0; 
+      transform-origin: top left;
+      z-index: 1;
+      width: 100vw;
+      height: 100vh; 
+    }
+
+    .full-screen-menu {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      background-color: #5c94fc;
+      background-image: 
+        linear-gradient(180deg, transparent 80%, #c84c0c 80%, #c84c0c 100%),
+        radial-gradient(circle at 20% 30%, white 5%, transparent 5%),
+        radial-gradient(circle at 25% 30%, white 6%, transparent 6%),
+        radial-gradient(circle at 30% 30%, white 5%, transparent 5%),
+        radial-gradient(circle at 70% 20%, white 4%, transparent 4%),
+        radial-gradient(circle at 75% 20%, white 5%, transparent 5%),
+        radial-gradient(circle at 80% 20%, white 4%, transparent 4%);
+      z-index: 100;
+    }
+
+    .title {
+      font-family: "Super Plumber Bros", "Courier New", Courier, monospace;
+      font-size: 80px;
+      color: #ffcccc;
+      text-shadow: 4px 4px 0px black, 8px 8px 0px rgba(0,0,0,0.3);
+      text-align: center;
+      margin-bottom: 60px;
+      line-height: 1.1;
+    }
+
+    .title span.small {
+      font-size: 50px;
+      display: block;
+      margin-bottom: -15px;
+    }
+
+    .menu-buttons {
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+
+    .btn {
+      font-family: "Super Plumber Bros", "Courier New", Courier, monospace;
+      background: #d64d00;
+      color: #ffcccc;
+      border: 4px solid black;
+      border-radius: 8px;
+      padding: 15px 40px;
+      font-size: 30px;
+      cursor: pointer;
+      box-shadow: 4px 4px 0px rgba(0,0,0,0.3), 4px 4px 0px inset #efb28b, -4px -4px 0px inset rgba(0,0,0,0.5);
+      transition: transform 0.1s, box-shadow 0.1s;
+    }
+
+    .btn:hover {
+      background: #e85a00;
+    }
+
+    .btn:active {
+      transform: translateY(4px);
+      box-shadow: 0px 0px 0px rgba(0,0,0,0.3), 4px 4px 0px inset #efb28b, -4px -4px 0px inset rgba(0,0,0,0.5);
+    }
+
+    .locked-btn {
+      background: #555 !important;
+      color: #777 !important;
+      border: 4px solid #333 !important;
+      box-shadow: 4px 4px 0px rgba(0,0,0,0.8), 4px 4px 0px inset #777, -4px -4px 0px inset rgba(0,0,0,0.7) !important;
+      cursor: not-allowed;
+      position: relative;
+    }
+
+    .locked-btn::after {
+      content: "🔒";
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      font-size: 40px;
+      opacity: 0.8;
+      pointer-events: none;
+    }
+
+    .auth-input {
+      font-family: "Courier New", Courier, monospace;
+      font-size: 24px;
+      padding: 10px;
+      margin-top: 15px;
+      width: 300px;
+      background: #ffffff;
+      color: #000000;
+      border: 4px solid black;
+      border-radius: 8px;
+      text-align: center;
+      box-shadow: 4px 4px 0px rgba(0,0,0,0.3);
+      outline: none;
+    }
+    .auth-input:focus {
+      border-color: #d64d00;
+    }
+    .auth-error {
+      color: #ffaaaa;
+      font-size: 16px;
+      height: 20px;
+      margin-top: 5px;
+      text-shadow: 2px 2px 0px black;
+      font-family: "Courier New", Courier, monospace;
+      font-weight: bold;
+    }
+
+    .volume-slider {
+      -webkit-appearance: none;
+      width: 100%;
+      height: 15px;
+      background: #000;
+      outline: none;
+      border: 2px solid #fff;
+      border-radius: 5px;
+      box-shadow: 2px 2px 0px rgba(0,0,0,0.5);
+    }
+
+    .volume-slider::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      appearance: none;
+      width: 25px;
+      height: 35px;
+      background: #ffcccc;
+      border: 3px solid #000;
+      border-radius: 4px;
+      cursor: pointer;
+      box-shadow: 2px 2px 0px rgba(0,0,0,0.5);
+    }
+    
+    .volume-slider::-moz-range-thumb {
+      width: 25px;
+      height: 35px;
+      background: #ffcccc;
+      border: 3px solid #000;
+      border-radius: 4px;
+      cursor: pointer;
+      box-shadow: 2px 2px 0px rgba(0,0,0,0.5);
+    }
+
+    .settings-row {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      margin: 20px 0;
+      width: 300px;
+      text-shadow: 2px 2px 0px black;
+    }
+
+    .settings-row label {
+      margin-bottom: 10px;
+      font-size: 24px;
+    }
+
+    #real-settings-modal {
+      display: none;
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      background: #d64d00;
+      border: 4px solid black;
+      border-radius: 12px;
+      padding: 30px;
+      z-index: 200;
+      box-shadow: 8px 8px 0px rgba(0,0,0,0.5), 4px 4px 0px inset #efb28b, -4px -4px 0px inset rgba(0,0,0,0.5);
+      text-align: center;
+      color: #ffcccc;
+      font-family: "Courier New", Courier, monospace;
+      font-weight: bold;
+      font-size: 24px;
+    }
+    #real-settings-modal h2 {
+      font-family: "Super Plumber Bros", "Courier New", Courier, monospace;
+      margin-top: 0;
+      font-size: 40px;
+      color: #ffcccc;
+      text-shadow: 2px 2px 0px black;
+    }
+
+    #settings-modal {
+      display: none;
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      background: #d64d00;
+      border: 4px solid black;
+      border-radius: 12px;
+      padding: 30px;
+      z-index: 200;
+      box-shadow: 8px 8px 0px rgba(0,0,0,0.5), 4px 4px 0px inset #efb28b, -4px -4px 0px inset rgba(0,0,0,0.5);
+      text-align: center;
+      color: #ffcccc;
+      font-family: "Courier New", Courier, monospace;
+      font-weight: bold;
+      font-size: 24px;
+    }
+
+    #settings-modal h2 {
+      font-family: "Super Plumber Bros", "Courier New", Courier, monospace;
+      margin-top: 0;
+      font-size: 40px;
+      color: #ffcccc;
+      text-shadow: 2px 2px 0px black;
+    }
+
+    #settings-modal p {
+      margin: 15px 0;
+      text-shadow: 2px 2px 0px black;
+    }
+
+    #mods-modal {
+      display: none;
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      background: #d64d00;
+      border: 4px solid black;
+      border-radius: 12px;
+      padding: 30px;
+      z-index: 200;
+      box-shadow: 8px 8px 0px rgba(0,0,0,0.5), 4px 4px 0px inset #efb28b, -4px -4px 0px inset rgba(0,0,0,0.5);
+      text-align: center;
+      color: #ffcccc;
+      font-family: "Courier New", Courier, monospace;
+      font-weight: bold;
+      font-size: 24px;
+    }
+
+    #mods-modal h2 {
+      font-family: "Super Plumber Bros", "Courier New", Courier, monospace;
+      margin-top: 0;
+      font-size: 40px;
+      text-shadow: 2px 2px 0px black;
+      text-align: center;
+    }
+
+    .mod-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin: 15px 0;
+      width: 400px;
+      text-shadow: 2px 2px 0px black;
+    }
+
+    .mod-row label {
+      cursor: pointer;
+    }
+
+    .mod-row input[type="checkbox"] {
+      width: 30px;
+      height: 30px;
+      cursor: pointer;
+    }
+
+    .square-btn {
+      width: 150px;
+      height: 150px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 0;
+      font-size: 28px;
+    }
+
+    .sq-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 20px;
+      margin-bottom: 40px;
+    }
+
+    .lvl-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 20px;
+      margin-bottom: 40px;
+    }
+  </style>
+</head>
+<body onresize="resizeIframe()" onload="initMenu()">
+
+  <audio id="menu-audio" loop>
+    <source id="menu-audio-src" src="Sounds/Themes/mp3/Overworld.mp3" type="audio/mpeg">
+  </audio>
+  
+  <div id="main-menu" class="full-screen-menu">
+    <div class="title">
+      <span class="small">super</span>
+      MARIO BROS.
+    </div>
+    <div class="menu-buttons">
+      <button class="btn" onclick="openPartSelection()">PLAY</button>
+      <button class="btn" onclick="openSettings()">HOW TO PLAY</button>
+      <button class="btn" onclick="openRealSettings()">SETTINGS</button>
+      <button class="btn" onclick="openMods()">MODS</button>
+      <button id="account-main-btn" class="btn" onclick="openAccountSelection()">ACCOUNT</button>
+    </div>
+  </div>
+
+  <div id="real-settings-modal">
+    <h2>SETTINGS</h2>
+    <div class="settings-row">
+      <label for="sounds-volume">SOUNDS</label>
+      <input type="range" id="sounds-volume" class="volume-slider" min="0" max="1" step="0.01" value="1" oninput="updateSoundsVolume()">
+    </div>
+    <div class="settings-row">
+      <label for="music-volume">MUSIC</label>
+      <input type="range" id="music-volume" class="volume-slider" min="0" max="1" step="0.01" value="1" oninput="updateMusicVolume()">
+    </div>
+    <button class="btn" style="margin-top: 20px; font-size: 20px; padding: 10px 20px;" onclick="closeRealSettings()">CLOSE</button>
+  </div>
+
+  <div id="account-selection-menu" class="full-screen-menu" style="display: none;">
+    <div class="title" style="margin-bottom: 30px;">ACCOUNT</div>
+    <div class="menu-buttons">
+      <button id="acc-btn-login" class="btn" onclick="openLogin()">LOG IN</button>
+      <button id="acc-btn-register" class="btn" onclick="openRegister()">REGISTER</button>
+      <button class="btn" style="font-size: 20px; padding: 10px 20px; margin-top: 20px;" onclick="closeAccountMenus()">BACK TO MAIN</button>
+    </div>
+  </div>
+
+  <div id="login-menu" class="full-screen-menu" style="display: none;">
+    <div class="title" style="margin-bottom: 20px;">LOG IN</div>
+    <div style="display:flex; flex-direction:column; align-items:center;">
+      <input type="text" id="login-username" class="auth-input" placeholder="LOGIN" maxlength="12">
+      <div id="login-username-error" class="auth-error"></div>
+      
+      <input type="password" id="login-password" class="auth-input" placeholder="PASSWORD">
+      <div id="login-password-error" class="auth-error"></div>
+      
+      <div class="menu-buttons" style="flex-direction:row; margin-top: 20px;">
+        <button class="btn" onclick="doLogin()">SUBMIT</button>
+        <button class="btn" onclick="openAccountSelection()">BACK</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="register-menu" class="full-screen-menu" style="display: none;">
+    <div class="title" style="margin-bottom: 20px;">REGISTER</div>
+    <div style="display:flex; flex-direction:column; align-items:center;">
+      <input type="text" id="reg-username" class="auth-input" placeholder="LOGIN" maxlength="12">
+      <div id="reg-username-error" class="auth-error"></div>
+      
+      <input type="password" id="reg-password" class="auth-input" placeholder="PASSWORD">
+      <div id="reg-password-error" class="auth-error"></div>
+
+      <input type="password" id="reg-confirm" class="auth-input" placeholder="CONFIRM PASSWORD">
+      <div id="reg-confirm-error" class="auth-error"></div>
+      
+      <div class="menu-buttons" style="flex-direction:row; margin-top: 20px;">
+        <button class="btn" onclick="doRegister()">SUBMIT</button>
+        <button class="btn" onclick="openAccountSelection()">BACK</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="settings-modal">
+    <h2>Controls</h2>
+    <p>Move: Arrows/WASD</p>
+    <p>Fire/Sprint: Shift/CTRL</p>
+    <p>Pause/Mute: P/M</p>
+    <button class="btn" style="margin-top: 20px; font-size: 20px; padding: 10px 20px;" onclick="closeSettings()">CLOSE</button>
+  </div>
+
+  <div id="mods-modal">
+    <h2>Mods</h2>
+    <div class="mod-row">
+      <label for="mod-weather">Weather</label>
+      <input type="checkbox" id="mod-weather">
+    </div>
+    <div class="mod-row">
+      <label for="mod-smart-enemies">Smart Enemies</label>
+      <input type="checkbox" id="mod-smart-enemies">
+    </div>
+    <div class="mod-row">
+      <label for="mod-magnet">Mario Magnet</label>
+      <input type="checkbox" id="mod-magnet">
+    </div>
+    <div class="mod-row">
+      <label for="mod-lava-rain">Lava Rain</label>
+      <input type="checkbox" id="mod-lava-rain">
+    </div>
+    <div class="mod-row">
+      <label for="mod-trap-world">Trap World</label>
+      <input type="checkbox" id="mod-trap-world">
+    </div>
+    <div class="mod-row">
+      <label for="mod-boulder-run">Boulder Run</label>
+      <input type="checkbox" id="mod-boulder-run">
+    </div>
+    <div class="mod-row">
+      <label for="mod-ice-world">Ice World</label>
+      <input type="checkbox" id="mod-ice-world">
+    </div>
+    <div class="mod-row">
+      <label for="mod-horror">Horror Mod (Screamers)</label>
+      <input type="checkbox" id="mod-horror">
+    </div>
+    <div style="text-align: center; margin-top: 30px;">
+      <button class="btn" style="font-size: 20px; padding: 10px 20px;" onclick="saveMods()">SAVE</button>
+    </div>
+  </div>
+
+  <div id="game-controls" style="display: none; position: absolute; top: 20px; left: 20px; z-index: 1000;">
+    <button id="pause-btn" style="width: 50px; height: 50px; background: url('Theme/Pause.png') no-repeat center center; background-size: contain; border: 2px solid black; border-radius: 0; box-shadow: none; cursor: pointer; color: transparent; font-size: 0;" onclick="togglePauseGame()">PAUSE</button>
+  </div>
+
+  <div id="pause-menu-overlay" style="display: none; position: absolute; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(0, 0, 0, 0.7); z-index: 2000; align-items: center; justify-content: center; flex-direction: column;">
+    <div style="background: linear-gradient(to bottom, #4facfe 0%, #00f2fe 100%); padding: 40px; border-radius: 15px; border: 4px solid #fff; box-shadow: 0 10px 30px rgba(0,0,0,0.5); text-align: center; font-family: 'Super Plumber Bros', 'Courier New', Courier, monospace;">
+      <h2 style="color: white; text-shadow: 3px 3px 0 #000, -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000, 1px 1px 0 #000; margin-top: 0; margin-bottom: 30px; font-size: 50px; letter-spacing: 2px;">PAUSED</h2>
+      
+      <button class="btn" onclick="pmResume()" style="display: block; width: 300px; margin: 15px auto; padding: 15px; font-size: 24px;">RESUME GAME</button>
+      
+      <button class="btn" onclick="pmRestart()" style="display: block; width: 300px; margin: 15px auto; padding: 15px; font-size: 24px;">RESTART LEVEL</button>
+      
+      <button class="btn" onclick="pmBackToMenu()" style="display: block; width: 300px; margin: 15px auto; padding: 15px; font-size: 24px;">BACK TO MENU</button>
+    </div>
+  </div>
+
+  <div id="game-over-menu-overlay" style="display: none; position: absolute; top: 0; left: 0; width: 100vw; height: 100vh; background: black; z-index: 2000; align-items: center; justify-content: center; flex-direction: column;">
+    <div style="background: linear-gradient(to bottom, #cf1b1b 0%, #900000 100%); padding: 40px; border-radius: 15px; border: 4px solid #fff; box-shadow: 0 10px 30px rgba(0,0,0,0.5); text-align: center; font-family: 'Super Plumber Bros', 'Courier New', Courier, monospace;">
+      <h2 style="color: white; text-shadow: 3px 3px 0 #000, -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000, 1px 1px 0 #000; margin-top: 0; margin-bottom: 30px; font-size: 50px; letter-spacing: 2px;">GAME OVER</h2>
+      
+      <button class="btn" onclick="goTryAgain()" style="display: block; width: 300px; margin: 15px auto; padding: 15px; font-size: 24px;">TRY AGAIN</button>
+      
+      <button class="btn" onclick="pmBackToMenu()" style="display: block; width: 300px; margin: 15px auto; padding: 15px; font-size: 24px;">BACK TO MENU</button>
+    </div>
+  </div>
+
+  <div id="part-selection-menu" class="full-screen-menu" style="display: none;">
+    <div class="title" style="margin-bottom: 30px;">PART SELECTION</div>
+    <div class="sq-grid" id="part-buttons">
+      <button class="btn square-btn" id="part-btn-1" onclick="openLevelSelection(1)">PART 1</button>
+      <button class="btn square-btn" id="part-btn-2" onclick="openLevelSelection(2)">PART 2</button>
+      <button class="btn square-btn" id="part-btn-3" onclick="openLevelSelection(3)">PART 3</button>
+      <button class="btn square-btn" id="part-btn-4" onclick="openLevelSelection(4)">PART 4</button>
+      <button class="btn square-btn" id="part-btn-5" onclick="openLevelSelection(5)">PART 5</button>
+      <button class="btn square-btn" id="part-btn-6" onclick="openLevelSelection(6)">PART 6</button>
+      <button class="btn square-btn" id="part-btn-7" onclick="openLevelSelection(7)">PART 7</button>
+      <button class="btn square-btn" id="part-btn-8" onclick="openLevelSelection(8)">PART 8</button>
+    </div>
+    <button class="btn" style="font-size: 20px; padding: 10px 20px;" onclick="closeMenusAndReturnToMain()">BACK TO MAIN</button>
+  </div>
+
+  <div id="level-selection-menu" class="full-screen-menu" style="display: none;">
+    <div class="title" id="level-selection-title" style="margin-bottom: 30px;">PART X LEVELS</div>
+    <div class="lvl-grid" id="level-buttons">
+      <button class="btn square-btn" id="lvl-btn-1" onclick="startSpecificLevel(1)">LVL 1</button>
+      <button class="btn square-btn" id="lvl-btn-2" onclick="startSpecificLevel(2)">LVL 2</button>
+      <button class="btn square-btn" id="lvl-btn-3" onclick="startSpecificLevel(3)">LVL 3</button>
+      <button class="btn square-btn" id="lvl-btn-4" onclick="startSpecificLevel(4)">LVL 4</button>
+    </div>
+    <button class="btn" style="font-size: 20px; padding: 10px 20px;" onclick="openPartSelection()">BACK TO PARTS</button>
+  </div>
+
+  <iframe id="game" src="mario.html"></iframe>
+  
+  <script>
+    let currentSelectedPart = 1;
+    let currentUser = localStorage.getItem('currentUser') || '';
+
+    function updateAccountButton() {
+      let btn = document.getElementById('account-main-btn');
+      if (currentUser) {
+        let displayUser = currentUser;
+        if (displayUser.length > 12) {
+          displayUser = displayUser.substring(0, 12) + "...";
+        }
+        btn.innerText = displayUser;
+      } else {
+        btn.innerText = "ACCOUNT";
+      }
+    }
+
+    function openAccountSelection() {
+      let btnLogin = document.getElementById('acc-btn-login');
+      let btnRegister = document.getElementById('acc-btn-register');
+
+      if (currentUser) {
+        let displayUser = currentUser;
+        if (displayUser.length > 12) {
+          displayUser = displayUser.substring(0, 12) + "...";
+        }
+        btnLogin.innerText = displayUser;
+        btnLogin.onclick = null;
+        btnLogin.style.cursor = 'default';
+        btnLogin.style.opacity = '0.8';
+
+        btnRegister.innerText = "LOG OUT";
+        btnRegister.onclick = doLogout;
+      } else {
+        btnLogin.innerText = "LOG IN";
+        btnLogin.onclick = openLogin;
+        btnLogin.style.cursor = 'pointer';
+        btnLogin.style.opacity = '1';
+
+        btnRegister.innerText = "REGISTER";
+        btnRegister.onclick = openRegister;
+      }
+
+      document.getElementById('main-menu').style.display = 'none';
+      document.getElementById('login-menu').style.display = 'none';
+      document.getElementById('register-menu').style.display = 'none';
+      document.getElementById('account-selection-menu').style.display = 'flex';
+    }
+
+    function doLogout() {
+      currentUser = '';
+      localStorage.removeItem('currentUser');
+      updateAccountButton();
+      closeAccountMenus();
+      resetToDefaults();
+    }
+
+    function closeAccountMenus() {
+      document.getElementById('account-selection-menu').style.display = 'none';
+      document.getElementById('login-menu').style.display = 'none';
+      document.getElementById('register-menu').style.display = 'none';
+      document.getElementById('main-menu').style.display = 'flex';
+    }
+
+    function openLogin() {
+      document.getElementById('account-selection-menu').style.display = 'none';
+      
+      document.getElementById('login-username').value = '';
+      document.getElementById('login-password').value = '';
+      document.getElementById('login-username-error').innerText = '';
+      document.getElementById('login-password-error').innerText = '';
+
+      document.getElementById('login-menu').style.display = 'flex';
+    }
+
+    function openRegister() {
+      document.getElementById('account-selection-menu').style.display = 'none';
+
+      document.getElementById('reg-username').value = '';
+      document.getElementById('reg-password').value = '';
+      document.getElementById('reg-confirm').value = '';
+      document.getElementById('reg-username-error').innerText = '';
+      document.getElementById('reg-password-error').innerText = '';
+      document.getElementById('reg-confirm-error').innerText = '';
+
+      document.getElementById('register-menu').style.display = 'flex';
+    }
+
+    function getAccounts() {
+      let accounts = localStorage.getItem('gameAccounts');
+      if (!accounts) return {};
+      try {
+        let parsed = JSON.parse(accounts);
+        // Migrate string passwords to objects
+        for (let key in parsed) {
+          if (typeof parsed[key] === 'string') {
+            parsed[key] = { password: parsed[key] };
+          }
+        }
+        return parsed;
+      } catch (e) {
+        return {};
+      }
+    }
+
+    function saveAccounts(accounts) {
+      localStorage.setItem('gameAccounts', JSON.stringify(accounts));
+    }
+
+    function saveCurrentUserState() {
+      if (!currentUser) return;
+      let accounts = getAccounts();
+      if (!accounts[currentUser]) return;
+
+      accounts[currentUser].maxPart = parseInt(localStorage.getItem('maxPart') || '1');
+      accounts[currentUser].maxLevel = parseInt(localStorage.getItem('maxLevel') || '1');
+      accounts[currentUser].soundsVolume = localStorage.getItem('soundsVolume') !== null ? parseFloat(localStorage.getItem('soundsVolume')) : 1;
+      accounts[currentUser].musicVolume = localStorage.getItem('musicVolume') !== null ? parseFloat(localStorage.getItem('musicVolume')) : 1;
+      accounts[currentUser].savedPowerTarget = localStorage.getItem('savedPowerTarget');
+      accounts[currentUser].savedPowerValue = localStorage.getItem('savedPowerValue');
+      accounts[currentUser].mods = {
+        weather: document.getElementById('mod-weather').checked,
+        smartEnemies: document.getElementById('mod-smart-enemies').checked,
+        magnet: document.getElementById('mod-magnet').checked,
+        lavaRain: document.getElementById('mod-lava-rain').checked,
+        trapWorld: document.getElementById('mod-trap-world').checked,
+        boulderRun: document.getElementById('mod-boulder-run').checked,
+        iceWorld: document.getElementById('mod-ice-world').checked,
+        horror: document.getElementById('mod-horror').checked
+      };
+      
+      saveAccounts(accounts);
+    }
+
+    function loadCurrentUserState(login) {
+      let accounts = getAccounts();
+      let account = accounts[login];
+      if (!account) return;
+
+      localStorage.setItem('maxPart', account.maxPart || 1);
+      localStorage.setItem('maxLevel', account.maxLevel || 1);
+      localStorage.setItem('soundsVolume', account.soundsVolume !== undefined ? account.soundsVolume : 1);
+      localStorage.setItem('musicVolume', account.musicVolume !== undefined ? account.musicVolume : 1);
+      
+      if (account.savedPowerTarget) {
+          localStorage.setItem('savedPowerTarget', account.savedPowerTarget);
+          localStorage.setItem('savedPowerValue', account.savedPowerValue);
+      } else {
+          localStorage.removeItem('savedPowerTarget');
+          localStorage.removeItem('savedPowerValue');
+      }
+
+      let mods = account.mods || {};
+      document.getElementById('mod-weather').checked = !!mods.weather;
+      document.getElementById('mod-smart-enemies').checked = !!mods.smartEnemies;
+      document.getElementById('mod-magnet').checked = !!mods.magnet;
+      document.getElementById('mod-lava-rain').checked = !!mods.lavaRain;
+      document.getElementById('mod-trap-world').checked = !!mods.trapWorld;
+      document.getElementById('mod-boulder-run').checked = !!mods.boulderRun;
+      document.getElementById('mod-ice-world').checked = !!mods.iceWorld;
+      document.getElementById('mod-horror').checked = !!mods.horror;
+
+      applyLoadedSettings();
+    }
+
+    function resetToDefaults() {
+      localStorage.setItem('maxPart', 1);
+      localStorage.setItem('maxLevel', 1);
+      localStorage.setItem('soundsVolume', 1);
+      localStorage.setItem('musicVolume', 1);
+      localStorage.removeItem('savedPowerTarget');
+      localStorage.removeItem('savedPowerValue');
+
+      document.getElementById('mod-weather').checked = false;
+      document.getElementById('mod-smart-enemies').checked = false;
+      document.getElementById('mod-magnet').checked = false;
+      document.getElementById('mod-lava-rain').checked = false;
+      document.getElementById('mod-trap-world').checked = false;
+      document.getElementById('mod-boulder-run').checked = false;
+      document.getElementById('mod-ice-world').checked = false;
+      document.getElementById('mod-horror').checked = false;
+
+      applyLoadedSettings();
+    }
+
+    function applyLoadedSettings() {
+      let soundsVol = parseFloat(localStorage.getItem('soundsVolume') || 1);
+      let musicVol = parseFloat(localStorage.getItem('musicVolume') || 1);
+
+      let soundSlider = document.getElementById('sounds-volume');
+      if (soundSlider) soundSlider.value = soundsVol;
+      let musicSlider = document.getElementById('music-volume');
+      if (musicSlider) musicSlider.value = musicVol;
+
+      const iframe = document.getElementById('game');
+      if (iframe.contentWindow) {
+        iframe.contentWindow.postMessage({action: "updateVolume", section: "Sounds", value: soundsVol}, "*");
+        iframe.contentWindow.postMessage({action: "updateVolume", section: "Themes", value: musicVol}, "*");
+        
+        iframe.contentWindow.MOD_WEATHER = document.getElementById('mod-weather').checked;
+        iframe.contentWindow.MOD_SMART_ENEMIES = document.getElementById('mod-smart-enemies').checked;
+        iframe.contentWindow.MOD_MAGNET = document.getElementById('mod-magnet').checked;
+        iframe.contentWindow.MOD_LAVA_RAIN = document.getElementById('mod-lava-rain').checked;
+        iframe.contentWindow.MOD_TRAP_WORLD = document.getElementById('mod-trap-world').checked;
+        iframe.contentWindow.MOD_BOULDER = document.getElementById('mod-boulder-run').checked;
+        iframe.contentWindow.MOD_ICE_WORLD = document.getElementById('mod-ice-world').checked;
+        iframe.contentWindow.MOD_HORROR = document.getElementById('mod-horror').checked;
+      }
+
+      const mAudio = document.getElementById('menu-audio');
+      if (mAudio) {
+        mAudio.volume = musicVol;
+        const isHorror = document.getElementById('mod-horror').checked;
+        const newSrc = isHorror ? "Sounds/Themes/mp3/spooky_sound.mp3" : "Sounds/Themes/mp3/Overworld.mp3";
+        const audioSrc = document.getElementById('menu-audio-src');
+        if (audioSrc && audioSrc.getAttribute('src') !== newSrc) {
+            audioSrc.setAttribute('src', newSrc);
+            mAudio.load();
+            if (document.getElementById('main-menu').style.display !== 'none') {
+                mAudio.play().catch(e => console.log(e));
+            }
+        }
+      }
+    }
+
+    function doRegister() {
+      let login = document.getElementById('reg-username').value;
+      let pass = document.getElementById('reg-password').value;
+      let conf = document.getElementById('reg-confirm').value;
+
+      document.getElementById('reg-username-error').innerText = '';
+      document.getElementById('reg-password-error').innerText = '';
+      document.getElementById('reg-confirm-error').innerText = '';
+
+      let hasError = false;
+
+      let regex = /^[a-zA-Z0-9]+$/;
+      if (!regex.test(login)) {
+        document.getElementById('reg-username-error').innerText = 'letters and numbers only';
+        hasError = true;
+      }
+      if (login.length > 12) {
+        document.getElementById('reg-username-error').innerText = 'max 12 characters';
+        hasError = true;
+      }
+      
+      let accounts = getAccounts();
+      if (accounts[login]) {
+        document.getElementById('reg-username-error').innerText = 'taken';
+        hasError = true;
+      }
+
+      if (pass !== conf) {
+        document.getElementById('reg-confirm-error').innerText = 'passwords do not match';
+        hasError = true;
+      }
+
+      if (hasError) return;
+
+      accounts[login] = {
+        password: pass,
+        maxPart: 1,
+        maxLevel: 1,
+        soundsVolume: 1,
+        musicVolume: 1,
+        savedPowerTarget: null,
+        savedPowerValue: 1,
+        mods: {}
+      };
+      saveAccounts(accounts);
+      
+      currentUser = login;
+      localStorage.setItem('currentUser', currentUser);
+      updateAccountButton();
+      closeAccountMenus();
+      resetToDefaults();
+    }
+
+    function doLogin() {
+      let login = document.getElementById('login-username').value;
+      let pass = document.getElementById('login-password').value;
+
+      document.getElementById('login-username-error').innerText = '';
+      document.getElementById('login-password-error').innerText = '';
+
+      let accounts = getAccounts();
+      if (!accounts[login]) {
+        document.getElementById('login-username-error').innerText = 'wrong login';
+        return;
+      }
+
+      if (accounts[login].password !== pass) {
+        document.getElementById('login-password-error').innerText = 'wrong password';
+        return;
+      }
+
+      currentUser = login;
+      localStorage.setItem('currentUser', currentUser);
+      updateAccountButton();
+      closeAccountMenus();
+      loadCurrentUserState(login);
+    }
+
+    function updatePartButtons() {
+      let maxP = parseInt(localStorage.getItem('maxPart') || '1');
+      for (let i = 1; i <= 8; i++) {
+        let btn = document.getElementById('part-btn-' + i);
+        if (i > maxP) {
+          btn.classList.add('locked-btn');
+          btn.onclick = null;
+        } else {
+          btn.classList.remove('locked-btn');
+          btn.onclick = function() { openLevelSelection(i); };
+        }
+      }
+    }
+
+    function updateLevelButtons(part) {
+      let maxP = parseInt(localStorage.getItem('maxPart') || '1');
+      let maxL = parseInt(localStorage.getItem('maxLevel') || '1');
+      for (let i = 1; i <= 4; i++) {
+        let btn = document.getElementById('lvl-btn-' + i);
+        if (part > maxP || (part === maxP && i > maxL)) {
+          btn.classList.add('locked-btn');
+          btn.onclick = null;
+        } else {
+          btn.classList.remove('locked-btn');
+          btn.onclick = function() { startSpecificLevel(i); };
+        }
+      }
+    }
+
+    function openPartSelection() {
+      updatePartButtons();
+      document.getElementById('main-menu').style.display = 'none';
+      document.getElementById('level-selection-menu').style.display = 'none';
+      document.getElementById('part-selection-menu').style.display = 'flex';
+    }
+
+    function openLevelSelection(partNumber) {
+      currentSelectedPart = partNumber;
+      updateLevelButtons(partNumber);
+      document.getElementById('part-selection-menu').style.display = 'none';
+      document.getElementById('level-selection-title').innerText = 'PART ' + partNumber + ' LEVELS';
+      document.getElementById('level-selection-menu').style.display = 'flex';
+    }
+
+    function closeMenusAndReturnToMain() {
+      document.getElementById('part-selection-menu').style.display = 'none';
+      document.getElementById('level-selection-menu').style.display = 'none';
+      document.getElementById('main-menu').style.display = 'flex';
+    }
+
+    function startSpecificLevel(levelNumber) {
+      document.getElementById('level-selection-menu').style.display = 'none';
+      document.getElementById('game-controls').style.display = 'block';
+      
+      const audio = document.getElementById('menu-audio');
+      if (audio) {
+        audio.pause();
+      }
+      
+      const iframe = document.getElementById('game');
+      
+      if (iframe.contentWindow) {
+        iframe.contentWindow.MOD_WEATHER = document.getElementById('mod-weather').checked;
+        iframe.contentWindow.MOD_SMART_ENEMIES = document.getElementById('mod-smart-enemies').checked;
+        iframe.contentWindow.MOD_MAGNET = document.getElementById('mod-magnet').checked;
+        iframe.contentWindow.MOD_LAVA_RAIN = document.getElementById('mod-lava-rain').checked;
+        iframe.contentWindow.MOD_TRAP_WORLD = document.getElementById('mod-trap-world').checked;
+        iframe.contentWindow.MOD_BOULDER = document.getElementById('mod-boulder-run').checked;
+        iframe.contentWindow.MOD_ICE_WORLD = document.getElementById('mod-ice-world').checked;
+        iframe.contentWindow.MOD_HORROR = document.getElementById('mod-horror').checked;
+
+        let soundsVol = localStorage.getItem('soundsVolume') !== null ? parseFloat(localStorage.getItem('soundsVolume')) : 1;
+        let musicVol = localStorage.getItem('musicVolume') !== null ? parseFloat(localStorage.getItem('musicVolume')) : 1;
+        iframe.contentWindow.postMessage({action: "updateVolume", section: "Sounds", value: soundsVol}, "*");
+        iframe.contentWindow.postMessage({action: "updateVolume", section: "Themes", value: musicVol}, "*");
+      }
+      
+      let powVal = 1;
+      let targetPowLvl = localStorage.getItem('savedPowerTarget');
+      let curLvlStr = currentSelectedPart + "-" + levelNumber;
+      if (targetPowLvl === curLvlStr) {
+          powVal = parseInt(localStorage.getItem('savedPowerValue') || "1");
+      }
+      
+      // Always reset the saved power target when you launch ANY level
+      localStorage.removeItem('savedPowerTarget');
+      localStorage.removeItem('savedPowerValue');
+      saveCurrentUserState();
+
+      iframe.contentWindow.postMessage({
+          action: "startGame", 
+          part: currentSelectedPart, 
+          lvl: levelNumber,
+          power: powVal
+      }, "*");
+      iframe.contentWindow.focus();
+    }
+
+    function startGame() {
+      // Hide the full screen menu layer
+      document.getElementById('main-menu').style.display = 'none';
+      document.getElementById('game-controls').style.display = 'block';
+      
+      const audio = document.getElementById('menu-audio');
+      if (audio) {
+        audio.pause();
+      }
+      
+      const iframe = document.getElementById('game');
+      
+      // Ensure mods are applied when clicking PLAY
+      if (iframe.contentWindow) {
+        iframe.contentWindow.MOD_WEATHER = document.getElementById('mod-weather').checked;
+        iframe.contentWindow.MOD_SMART_ENEMIES = document.getElementById('mod-smart-enemies').checked;
+        iframe.contentWindow.MOD_MAGNET = document.getElementById('mod-magnet').checked;
+        iframe.contentWindow.MOD_LAVA_RAIN = document.getElementById('mod-lava-rain').checked;
+        iframe.contentWindow.MOD_TRAP_WORLD = document.getElementById('mod-trap-world').checked;
+        iframe.contentWindow.MOD_BOULDER = document.getElementById('mod-boulder-run').checked;
+        iframe.contentWindow.MOD_ICE_WORLD = document.getElementById('mod-ice-world').checked;
+        iframe.contentWindow.MOD_HORROR = document.getElementById('mod-horror').checked;
+        
+        let soundsVol = localStorage.getItem('soundsVolume') !== null ? parseFloat(localStorage.getItem('soundsVolume')) : 1;
+        let musicVol = localStorage.getItem('musicVolume') !== null ? parseFloat(localStorage.getItem('musicVolume')) : 1;
+        iframe.contentWindow.postMessage({action: "updateVolume", section: "Sounds", value: soundsVol}, "*");
+        iframe.contentWindow.postMessage({action: "updateVolume", section: "Themes", value: musicVol}, "*");
+
+        // Force the game engines to reload the map to apply new setups immediately
+        if (iframe.contentWindow.window.gameon && iframe.contentWindow.window.currentmap) {
+             iframe.contentWindow.setMap(iframe.contentWindow.window.currentmap);
+        }
+      }
+      
+      // Let the iframe know it can start map 1-1
+      iframe.contentWindow.postMessage("startGame", "*");
+      iframe.contentWindow.focus();
+    }
+
+    function togglePauseGame() {
+      const iframe = document.getElementById('game');
+      const pm = document.getElementById('pause-menu-overlay');
+      if (iframe.contentWindow) {
+        if (iframe.contentWindow.paused) {
+          iframe.contentWindow.unpause(true);
+          document.getElementById('pause-btn').style.background = "url('Theme/Pause.png') no-repeat center center";
+          document.getElementById('pause-btn').style.backgroundSize = "contain";
+          pm.style.display = "none";
+        } else {
+          iframe.contentWindow.pause(true);
+          document.getElementById('pause-btn').style.background = "url('Theme/save.gif') no-repeat center center";
+          document.getElementById('pause-btn').style.backgroundSize = "contain";
+          pm.style.display = "flex";
+        }
+        // Return focus to iframe so keyboard controls continue to work
+        iframe.contentWindow.focus();
+      }
+    }
+
+    function pmResume() {
+      togglePauseGame();
+    }
+
+    function pmRestart() {
+      document.body.style.backgroundColor = '#5c94fc';
+      const iframe = document.getElementById('game');
+      if (iframe.contentWindow && iframe.contentWindow.window.gameon && iframe.contentWindow.window.currentmap) {
+          const cw = iframe.contentWindow;
+          if (cw.paused) {
+             cw.unpause(true);
+          }
+          
+          // Reset all stats completely as requested
+          if (cw.data) {
+              cw.data.score.amount = 0;
+              cw.updateDataElement(cw.data.score);
+              cw.data.coins.amount = 0;
+              cw.updateDataElement(cw.data.coins);
+              cw.data.lives.amount = 3;
+              cw.updateDataElement(cw.data.lives);
+              cw.data.playerpower = 1;
+              if (cw.player) cw.player.power = 1;
+          }
+
+          cw.setMap(cw.window.currentmap);
+          document.getElementById('pause-menu-overlay').style.display = 'none';
+          document.getElementById('pause-btn').style.background = "url('Theme/Pause.png') no-repeat center center";
+          document.getElementById('pause-btn').style.backgroundSize = "contain";
+          cw.focus();
+      }
+    }
+
+    function pmBackToMenu() {
+        document.body.style.backgroundColor = '#5c94fc';
+        const iframe = document.getElementById('game');
+        
+        if (iframe.contentWindow && iframe.contentWindow.window.gameon && iframe.contentWindow.window.currentmap) {
+            let cw = iframe.contentWindow.window;
+            let isDead = cw.player && cw.player.dead;
+            let pPower = 1;
+            
+            if (!isDead) {
+                if (cw.player && cw.player.power) {
+                    pPower = cw.player.power;
+                } else if (cw.data && cw.data.playerpower) {
+                    pPower = cw.data.playerpower;
+                }
+            }
+            
+            if (pPower > 1 && cw.gamecount !== Infinity && !cw.notime && !cw.isCompleting) {
+                let part = cw.currentmap[0];
+                let lvl = cw.currentmap[1];
+                localStorage.setItem('savedPowerTarget', part + "-" + lvl);
+                localStorage.setItem('savedPowerValue', pPower);
+            } else if (!cw.isCompleting && (cw.gamecount === Infinity || isDead || pPower === 1)) {
+                localStorage.removeItem('savedPowerTarget');
+                localStorage.removeItem('savedPowerValue');
+            }
+            saveCurrentUserState();
+        }
+
+        if (iframe.contentWindow && iframe.contentWindow.paused) {
+             iframe.contentWindow.unpause(true);
+        }
+        
+        iframe.src = 'mario.html'; 
+        
+        document.getElementById('pause-menu-overlay').style.display = 'none';
+        document.getElementById('game-over-menu-overlay').style.display = 'none';
+        document.getElementById('game-controls').style.display = 'none';
+        document.getElementById('part-selection-menu').style.display = 'flex';
+        
+        const audio = document.getElementById('menu-audio');
+        if (audio) {
+            audio.currentTime = 0;
+            audio.play();
+        }
+    }
+
+    function goTryAgain() {
+        document.body.style.backgroundColor = '#5c94fc';
+        document.getElementById('game-over-menu-overlay').style.display = 'none';
+        document.getElementById('game-controls').style.display = 'block';
+        const iframe = document.getElementById('game');
+        if (iframe.contentWindow) {
+            iframe.contentWindow.postMessage({action: "tryAgain"}, "*");
+            iframe.contentWindow.focus();
+        }
+    }
+
+    window.addEventListener("message", function(e) {
+        if (e.data && e.data.action === "logError") { 
+            let errDiv = document.createElement("div"); 
+            errDiv.style.position = "absolute"; errDiv.style.top = "10px"; errDiv.style.left = "10px"; errDiv.style.color = "red"; errDiv.style.background = "white"; errDiv.style.zIndex = "999999"; errDiv.style.fontSize = "24px"; errDiv.style.padding = "10px"; 
+            errDiv.innerText = "ERROR: " + e.data.msg; 
+            document.body.appendChild(errDiv); 
+        }
+        if (e.data && e.data.action === "mapStarted") {
+            const iframe = document.getElementById('game');
+            if (iframe.contentWindow) iframe.contentWindow.isCompleting = false;
+
+            let pow = e.data.power || 1;
+            if (pow > 1) {
+                localStorage.setItem('savedPowerTarget', e.data.part + "-" + e.data.level);
+                localStorage.setItem('savedPowerValue', pow);
+            } else {
+                localStorage.removeItem('savedPowerTarget');
+                localStorage.removeItem('savedPowerValue');
+            }
+            saveCurrentUserState();
+        }
+        if (e.data && e.data.action === "gameOver_start") {
+            localStorage.removeItem('savedPowerTarget');
+            localStorage.removeItem('savedPowerValue');
+            saveCurrentUserState();
+            document.body.style.backgroundColor = 'black';
+            document.getElementById('game-controls').style.display = 'none';
+        }
+        if (e.data && e.data.action === "gameOver_ui") {
+            document.body.style.backgroundColor = 'black';
+            document.getElementById('game-over-menu-overlay').style.display = 'flex';
+        }
+        if (e.data && e.data.action === "levelComplete") {
+            let p = parseInt(e.data.part);
+            let l = parseInt(e.data.level);
+            let pow = e.data.power || 1;
+            let nextPart = p;
+            let nextLevel = l + 1;
+            if (nextLevel > 4) {
+               nextLevel = 1;
+               nextPart++;
+            }
+            
+            if (pow > 1) {
+                localStorage.setItem('savedPowerTarget', nextPart + "-" + nextLevel);
+                localStorage.setItem('savedPowerValue', pow);
+            } else {
+                localStorage.removeItem('savedPowerTarget');
+                localStorage.removeItem('savedPowerValue');
+            }
+            
+            // Mark the iframe so we know it's in the complete animation
+            const iframe = document.getElementById('game');
+            if (iframe.contentWindow) {
+                iframe.contentWindow.isCompleting = true;
+            }
+            
+            unlockLevel(nextPart, nextLevel);
+            updatePartButtons();
+        }
+    });
+
+    function unlockLevel(p, l) {
+        let maxP = parseInt(localStorage.getItem('maxPart') || '1');
+        let maxL = parseInt(localStorage.getItem('maxLevel') || '1');
+        if (p > maxP || (p === maxP && l > maxL)) {
+            localStorage.setItem('maxPart', p);
+            localStorage.setItem('maxLevel', l);
+            saveCurrentUserState();
+        }
+    }
+
+    function openMods() {
+      document.getElementById('mods-modal').style.display = 'block';
+    }
+
+    function saveMods() {
+      document.getElementById('mods-modal').style.display = 'none';
+      
+      const iframe = document.getElementById('game');
+      if (iframe.contentWindow) {
+        iframe.contentWindow.MOD_WEATHER = document.getElementById('mod-weather').checked;
+        iframe.contentWindow.MOD_SMART_ENEMIES = document.getElementById('mod-smart-enemies').checked;
+        iframe.contentWindow.MOD_MAGNET = document.getElementById('mod-magnet').checked;
+        iframe.contentWindow.MOD_LAVA_RAIN = document.getElementById('mod-lava-rain').checked;
+        iframe.contentWindow.MOD_TRAP_WORLD = document.getElementById('mod-trap-world').checked;
+        iframe.contentWindow.MOD_BOULDER = document.getElementById('mod-boulder-run').checked;
+        iframe.contentWindow.MOD_ICE_WORLD = document.getElementById('mod-ice-world').checked;
+        iframe.contentWindow.MOD_HORROR = document.getElementById('mod-horror').checked;
+      }
+      
+      saveCurrentUserState();
+      
+      const audio = document.getElementById('menu-audio');
+      if (audio && document.getElementById('main-menu').style.display !== 'none') {
+        const isHorror = document.getElementById('mod-horror').checked;
+        const newSrc = isHorror ? "Sounds/Themes/mp3/spooky_sound.mp3" : "Sounds/Themes/mp3/Overworld.mp3";
+        const audioSrc = document.getElementById('menu-audio-src');
+        if (audioSrc.getAttribute('src') !== newSrc) {
+            audioSrc.setAttribute('src', newSrc);
+            audio.load();
+            audio.play().catch(e => console.log(e));
+        } else {
+            audio.play().catch(e => console.log(e));
+        }
+      }
+    }
+
+    function openRealSettings() {
+      // Load saved volumes or default to 1
+      let soundsVol = localStorage.getItem('soundsVolume');
+      let musicVol = localStorage.getItem('musicVolume');
+      
+      document.getElementById('sounds-volume').value = soundsVol !== null ? soundsVol : 1;
+      document.getElementById('music-volume').value = musicVol !== null ? musicVol : 1;
+      
+      document.getElementById('real-settings-modal').style.display = 'block';
+    }
+
+    function closeRealSettings() {
+      document.getElementById('real-settings-modal').style.display = 'none';
+    }
+
+    function updateSoundsVolume() {
+      let vol = document.getElementById('sounds-volume').value;
+      localStorage.setItem('soundsVolume', vol);
+      const iframe = document.getElementById('game');
+      if (iframe.contentWindow) {
+        iframe.contentWindow.postMessage({action: "updateVolume", section: "Sounds", value: parseFloat(vol)}, "*");
+      }
+      saveCurrentUserState();
+    }
+
+    function updateMusicVolume() {
+      let vol = document.getElementById('music-volume').value;
+      localStorage.setItem('musicVolume', vol);
+      const iframe = document.getElementById('game');
+      
+      // Update iframe game music volume if running
+      if (iframe.contentWindow) {
+        iframe.contentWindow.postMessage({action: "updateVolume", section: "Themes", value: parseFloat(vol)}, "*");
+      }
+      
+      // Update menu music volume
+      const audio = document.getElementById('menu-audio');
+      if (audio) {
+        audio.volume = parseFloat(vol);
+      }
+      saveCurrentUserState();
+    }
+
+    function openSettings() {
+      document.getElementById('settings-modal').style.display = 'block';
+    }
+
+    function closeSettings() {
+      document.getElementById('settings-modal').style.display = 'none';
+    }
+
+    function initMenu() {
+      resizeIframe();
+      updateAccountButton();
+      
+      if (currentUser) {
+          loadCurrentUserState(currentUser);
+      } else {
+          applyLoadedSettings();
+      }
+      
+      // Load saved volumes early for main menu music
+      let musicVol = localStorage.getItem('musicVolume') !== null ? parseFloat(localStorage.getItem('musicVolume')) : 1;
+      const mAudio = document.getElementById('menu-audio');
+      if (mAudio) {
+        mAudio.volume = musicVol;
+      }
+
+      document.addEventListener('click', function unlockAudio() {
+        const audio = document.getElementById('menu-audio');
+        if (audio && document.getElementById('main-menu').style.display !== 'none') {
+            audio.play().catch(e => console.log('Audio error:', e));
+        }
+        document.removeEventListener('click', unlockAudio);
+      }, { once: true });
+    }
+
+    function resizeIframe() {
+      const iframe = document.getElementById('game');
+      
+      /* Cut exactly elements as requested: */
+      const cutX = 19 * 32;
+      const cutY = 10 * 32;
+      
+      const targetWidth = window.innerWidth - cutX;
+      const targetHeight = window.innerHeight - cutY;
+      
+      if (targetWidth <= 0 || targetHeight <= 0) return;
+      
+      iframe.style.width = targetWidth + 'px';
+      iframe.style.height = targetHeight + 'px';
+      
+      const scaleX = window.innerWidth / targetWidth;
+      const scaleY = window.innerHeight / targetHeight;
+      
+      iframe.style.transform = `scale(${scaleX}, ${scaleY})`;
+    }
+    
+    // Give time to resize before the iframe calculates its internal canvas
+    setTimeout(resizeIframe, 10);
+    
+    // Sync the pause button text with the game's actual pause state (in case user hits 'p' key)
+    setInterval(() => {
+      const iframe = document.getElementById('game');
+      const btn = document.getElementById('pause-btn');
+      const pm = document.getElementById('pause-menu-overlay');
+      if (iframe && iframe.contentWindow && document.getElementById('game-controls').style.display !== 'none') {
+          // If game is in GAME OVER state, don't show the pause menu at all.
+          if (iframe.contentWindow.window && iframe.contentWindow.window.gamecount === Infinity) {
+              if (pm.style.display === "flex") pm.style.display = "none";
+              return;
+          }
+
+          if (iframe.contentWindow.paused) {
+              btn.style.background = "url('Theme/save.gif') no-repeat center center";
+              btn.style.backgroundSize = "contain";
+              if (pm.style.display === "none") pm.style.display = "flex";
+          } else {
+              btn.style.background = "url('Theme/Pause.png') no-repeat center center";
+              btn.style.backgroundSize = "contain";
+              if (pm.style.display === "flex") pm.style.display = "none";
+          }
+      }
+    }, 200);
+  </script>
+</body>
+</html>
