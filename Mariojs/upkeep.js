@@ -6,6 +6,14 @@ function upkeep() {
   // window.nextupk = requestAnimationFrame(upkeep);
   window.nextupk = requestAnimationFrame(upkeep);
   
+  var now_time = Date.now();
+  if (!window.last_upkeep_time) window.last_upkeep_time = now_time;
+  var elapsed = now_time - window.last_upkeep_time;
+  
+  if (elapsed < (1000 / window.fps_target)) return;
+  
+  window.last_upkeep_time = now_time - (elapsed % (1000 / window.fps_target));
+  
   // See utility.js::fastforward
   for(var i = window.speed; i > 0; --i) {
     
