@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Preezy Mobile App</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="app-bg"></div>
+
+  <main class="phone-shell">
+    <section class="phone">
+      <header class="statusbar">
+        <span class="status-time">9:41</span>
+        <div class="dynamic-island" aria-hidden="true"></div>
+        <div class="status-icons">
+          <span class="cell-bars" aria-hidden="true"><i></i><i></i><i></i><i></i></span>
+          <span class="wifi" aria-hidden="true">
+            <svg viewBox="0 0 20 14" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M2 4.5C6.5 1 13.5 1 18 4.5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
+              <path d="M5 7.5C8 5.2 12 5.2 15 7.5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
+              <path d="M8.2 10.7C9.4 9.8 10.6 9.8 11.8 10.7" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
+            </svg>
+          </span>
+          <span class="battery" aria-label="Battery 100 percent">
+            <span class="battery-level" style="width: 100%"></span>
+          </span>
+        </div>
+      </header>
+
+      <div class="screen-container">
+        <section class="screen is-active" id="screen-home">
+          <div class="top-row">
+            <h1 class="brand">PREEZY</h1>
+            <div class="icon-row">
+              <button class="icon-btn" aria-label="Monitor"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="3" width="20" height="14" rx="2" ry="2"></rect><line x1="8" y1="21" x2="16" y2="21"></line><line x1="12" y1="17" x2="12" y2="21"></line></svg></button>
+              <button class="icon-btn" aria-label="Notifications"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path><path d="M13.73 21a2 2 0 0 1-3.46 0"></path></svg></button>
+              <button class="icon-btn" aria-label="Menu"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="18" x2="21" y2="18"></line></svg></button>
+            </div>
+          </div>
+
+          <article class="premium-card">
+            <div>
+              <p class="muted">Get exclusive rewards<br>with Premium</p>
+              <button class="play-btn">Play now</button>
+            </div>
+            <img class="premium-reward-img" src="assets/banner-box.png" alt="Premium reward box">
+          </article>
+
+          <div class="quick-grid">
+            <article class="quick-item"><img src="assets/icon-hands.png" alt="Social"><h3>Social tab</h3><p>Play with friends</p></article>
+            <article class="quick-item"><img src="assets/icon-events.png" alt="Invite"><h3>Get 10</h3><p>Invite your friends</p></article>
+            <article class="quick-item"><img src="assets/icon-mission.png" alt="Missions"><h3>Missions</h3><p>Load up on tickets</p></article>
+            <article class="quick-item"><img src="assets/medal+.png" alt="Events"><h3>Events</h3><p>Get new rewards</p></article>
+          </div>
+
+          <article class="market-card">
+            <div class="market-icons">
+              <img src="assets/market-phone.png" alt="Phone">
+              <img src="assets/market-headphones.png" alt="Headphones">
+              <img src="assets/market-gamepad.png" alt="Gamepad">
+            </div>
+            <h3>Market drops</h3>
+            <p>Daily loot and avatar accessories</p>
+          </article>
+        </section>
+
+        <section class="screen" id="screen-avatar">
+          <div class="top-row avatar-head">
+            <div class="gems">💎 1500 gems</div>
+            <button class="icon-btn small" aria-label="Settings"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path></svg></button>
+          </div>
+
+          <article class="avatar-stage">
+              <div class="avatar-art">
+                <div class="avatar-art-stack">
+                  <img class="avatar-base" src="assets/man-model.png" alt="Current avatar model">
+                  <img class="avatar-hat" id="avatarPreviewMainHat" src="assets/knight-ironhat.png" alt="Equipped hat">
+                </div>
+            <button class="edit-avatar-btn" id="openEditAvatar" aria-label="Edit avatar"><img src="assets/pencil.png" alt="Edit"></button>
+          </article>
+
+          <div class="xp-row">
+            <div class="xp-cell" style="--xp:12; --color:#9ea6b5">
+              <div class="xp-ring" aria-hidden="true"></div>
+              <div class="xp-content">
+                <img src="assets/knight-ironhat.png" alt="Hornbreaker helm">
+                <div class="xp-value"><strong>12</strong></div>
+              </div>
+              <div class="xp-badge">XP</div>
+            </div>
+
+            <div class="xp-cell" style="--xp:15; --color:#8b2222">
+              <div class="xp-ring" aria-hidden="true"></div>
+              <div class="xp-content">
+                <img src="assets/pirate-hat.png" alt="Pirate hat">
+                <div class="xp-value"><strong>15</strong></div>
+              </div>
+              <div class="xp-badge">XP</div>
+            </div>
+
+            <div class="xp-cell" style="--xp:14; --color:#b8860b">
+              <div class="xp-ring" aria-hidden="true"></div>
+              <div class="xp-content">
+                <img src="assets/viking-hat.png" alt="Viking helm">
+                <div class="xp-value"><strong>14</strong></div>
+              </div>
+              <div class="xp-badge">XP</div>
+            </div>
+
+            <div class="xp-cell" style="--xp:18; --color:#8a2be2">
+              <div class="xp-ring" aria-hidden="true"></div>
+              <div class="xp-content">
+                <img src="assets/magical-hat.png" alt="Mage hat">
+                <div class="xp-value"><strong>18</strong></div>
+              </div>
+              <div class="xp-badge">XP</div>
+            </div>
+          </div>
+
+          <article class="player-card">
+            <h2>MannieMay03</h2>
+            <div class="progress-line"><span style="width: 40%"></span></div>
+            <div class="progress-meta"><small>6000 / 15000 XP</small><small>Next level</small></div>
+            
+            <div class="stats-row">
+              <article>
+                <div class="stat-icon-wrap"><img src="assets/blue-ball.png" alt=""></div>
+                <div class="stat-info">
+                  <h4>XP/MIN</h4>
+                  <strong>50</strong>
+                </div>
+              </article>
+              <article>
+                <div class="stat-icon-wrap"><img src="assets/zipper.png" alt=""></div>
+                <div class="stat-info">
+                  <h4>LEVEL</h4>
+                  <strong>1000</strong>
+                </div>
+              </article>
+            </div>
+          </article>
+        </section>
+
+        <section class="screen" id="screen-edit-avatar">
+          <div class="edit-top">
+            <button class="back-btn" id="backToAvatar">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M15 18l-6-6 6-6" />
+              </svg>
+            </button>
+            <h2>Change avatar</h2>
+            <button class="save-btn" id="saveAvatar">Save</button>
+          </div>
+
+          <div class="edit-hero-area">
+            <!-- Фоновый аватар слева -->
+            <div class="selected-avatar">
+              <div class="selected-avatar-stack">
+                <img class="avatar-base" src="assets/man-model.png" alt="Selected avatar model">
+                <img class="avatar-hat" id="avatarPreviewEditHat" src="assets/knight-ironhat.png" alt="Selected hat">
+              </div>
+            </div>
+            
+            <!-- Табличка с характеристиками справа -->
+            <article class="item-info">
+              <div class="item-info-img-wrapper">
+                <img id="selectedItemImage" src="assets/knight-ironhat.png" alt="Helm">
+              </div>
+              <h3 id="selectedItemTitle">Hornbreaker helm</h3>
+              <p id="selectedItemBoost">XP boost: 12 XP/min</p>
+              <p id="selectedItemDurability">Durability: 1.4 hours</p>
+              <div class="durability-progress-bar">
+                <span id="durabilityFill" style="width: 40%; background: #9fa7b5;"></span>
+              </div>
+            </article>
+          </div>
+
+          <!-- Темно-серая шторка (панель) снизу без item-info -->
+          <div class="edit-bottom-sheet">
+            <div class="tabs-row">
+              <button class="edit-tab">Appearance</button>
+              <button class="edit-tab is-active">Inventory</button>
+            </div>
+
+            <div class="slot-filters">
+              <button>Weapon</button>
+              <button>Cloths</button>
+              <button class="is-active">Helmet</button>
+              <button>Pet</button>
+            </div>
+
+            <div class="inventory-grid" id="inventoryGrid">
+              <button class="item-slot" data-hat-src="" data-name="No helmet" data-boost="0 XP/min" data-durability="Unlimited" data-color="#555" data-fill="0"><svg width="80" height="80" viewBox="0 0 24 24" fill="none" stroke="#686e8a" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="opacity: 0.5;"><circle cx="12" cy="12" r="10"></circle><line x1="4.93" y1="4.93" x2="19.07" y2="19.07"></line></svg></button>
+              <button class="item-slot" data-hat-src="assets/knight-ironhat.png" data-name="Hornbreaker helm" data-color="#9ea6b5" data-fill="40" data-boost="12 XP/min" data-durability="1.4 hours"><img src="assets/knight-ironhat.png" alt="Hornbreaker helm"></button>
+              <button class="item-slot" data-hat-src="assets/gentleman-hat.png" data-name="Gentleman hat" data-color="#6b6f7a" data-fill="60" data-boost="10 XP/min" data-durability="2.1 hours"><img src="assets/gentleman-hat.png" alt="Gentleman hat"></button>
+              <button class="item-slot" data-hat-src="assets/pirate-hat.png" data-name="Pirate hat" data-color="#8b2222" data-fill="30" data-boost="15 XP/min" data-durability="1.1 hours"><img src="assets/pirate-hat.png" alt="Pirate hat"></button>
+              <button class="item-slot" data-hat-src="assets/bandana-hat.png" data-name="Bandana hat" data-color="#d32f2f" data-fill="85" data-boost="9 XP/min" data-durability="3.0 hours"><img src="assets/bandana-hat.png" alt="Bandana hat"></button>
+            <button class="item-slot" data-hat-src="assets/viking-hat.png" data-name="Viking helm" data-color="#b8860b" data-fill="55" data-boost="14 XP/min" data-durability="1.9 hours"><img src="assets/viking-hat.png" alt="Viking helm"></button>
+            <button class="item-slot" data-hat-src="assets/magical-hat.png" data-name="Mage hat" data-color="#8a2be2" data-fill="25" data-boost="18 XP/min" data-durability="0.9 hours"><img src="assets/magical-hat.png" alt="Mage hat"></button>
+            <button class="item-slot" data-hat-src="assets/space-hat.png" data-name="Space helmet" data-color="#add8e6" data-fill="70" data-boost="13 XP/min" data-durability="2.4 hours"><img src="assets/space-hat.png" alt="Space helmet"></button>
+            <button class="item-slot" data-hat-src="assets/kunfu-hat.png" data-name="Kung-fu hat" data-color="#f0e68c" data-fill="95" data-boost="8 XP/min" data-durability="3.3 hours"><img src="assets/kunfu-hat.png" alt="Kung-fu hat"></button>
+          </div>
+        </section>
+      </div>
+
+      <nav class="bottom-nav">
+        <button class="nav-item is-active" data-target="home"><img src="assets/home-selected.png" alt=""><span>Hub</span></button>
+        <button class="nav-item" data-target="market"><img src="assets/cup-unselected.png" alt=""><span>Market place</span></button>
+        <button class="nav-item" data-target="trade"><img src="assets/gamepad-unselected.png" alt=""><span>Trade</span></button>
+        <button class="nav-item" data-target="avatar"><img src="assets/people-unselected.png" alt=""><span>Avatar</span></button>
+      </nav>
+    </section>
+  </main>
+
+  <script src="script.js"></script>
+</body>
+</html>
