@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Cyberpunk Canvas</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <div class="app-shell">
+    <header class="top-bar">
+      <h1>Cyberpunk Canvas</h1>
+      <div class="buttons">
+        <button id="camBtn" class="neon-btn">Turn Camera On</button>
+        <label class="neon-btn file-btn">Load Image
+          <input type="file" id="fileInput" accept="image/*" />
+        </label>
+      </div>
+    </header>
+
+    <section class="controls">
+      <div class="effect-block">
+        <h2>Effects</h2>
+        <div class="switch-grid">
+          <input type="checkbox" id="effectRGBSplit" class="effect-checkbox" />
+          <label for="effectRGBSplit" class="toggle-btn">RGB Split</label>
+
+          <input type="checkbox" id="effectDatamosh" class="effect-checkbox" />
+          <label for="effectDatamosh" class="toggle-btn">Datamoshing Lite</label>
+
+          <input type="checkbox" id="effectPixelSort" class="effect-checkbox" />
+          <label for="effectPixelSort" class="toggle-btn">Pixel Sorting</label>
+
+          <input type="checkbox" id="effectAudioDist" class="effect-checkbox" />
+          <label for="effectAudioDist" class="toggle-btn">Audio-Reactive</label>
+
+          <input type="checkbox" id="effectScanline" class="effect-checkbox" />
+          <label for="effectScanline" class="toggle-btn">Scanline</label>
+
+          <input type="checkbox" id="effectVHS" class="effect-checkbox" />
+          <label for="effectVHS" class="toggle-btn">VHS Noise</label>
+
+          <input type="checkbox" id="effectMirror" class="effect-checkbox" />
+          <label for="effectMirror" class="toggle-btn">Mirror Dimension</label>
+
+          <input type="checkbox" id="effectFreeze" class="effect-checkbox" />
+          <label for="effectFreeze" class="toggle-btn">Frame Freeze</label>
+
+          <input type="checkbox" id="effectASCII" class="effect-checkbox" />
+          <label for="effectASCII" class="toggle-btn">ASCII Mode</label>
+        </div>
+      </div>
+
+      <div class="slider-block">
+        <label class="slider-row"><span class="slider-label">RGB Split</span><input class="slider-input" type="range" id="rgbRange" min="0" max="60" value="20" /></label>
+        <label class="slider-row"><span class="slider-label">Datamosh Mix</span><input class="slider-input" type="range" id="datamoshRange" min="0" max="100" value="15" /></label>
+        <label class="slider-row"><span class="slider-label">Pixel Sort Thr</span><input class="slider-input" type="range" id="pixelThreshold" min="10" max="255" value="140" /></label>
+        <label class="slider-row"><span class="slider-label">Audio Max</span><input class="slider-input" type="range" id="audioDistRange" min="0" max="80" value="25" /></label>
+        <label class="slider-row"><span class="slider-label">Mirror Parts</span><input class="slider-input" type="range" id="mirrorCount" min="4" max="8" step="4" value="4" /></label>
+      </div>
+
+      <div class="action-block">
+        <button id="chaosSaveBtn" class="neon-btn">Chaos Save</button>
+      </div>
+    </section>
+
+    <main class="canvas-container">
+      <canvas id="mainCanvas"></canvas>
+      <div id="hint">Camera or image will fill canvas with preserved aspect ratio.</div>
+    </main>
+
+    <video id="video" autoplay muted playsinline style="display:none;"></video>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>
