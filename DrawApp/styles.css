@@ -1,0 +1,22 @@
+/* Simple responsive layout */
+html,body{height:100%;margin:0;font-family:Arial,Helvetica,sans-serif}
+.toolbar{display:flex;gap:8px;align-items:center;padding:8px;background:#f3f3f3;border-bottom:1px solid #ddd}
+.toolbar .label{display:flex;align-items:center;gap:6px}
+button{padding:6px 10px;border:1px solid #ccc;background:#fff;border-radius:4px;cursor:pointer}
+button:active{transform:translateY(1px)}
+#canvas{flex:1;display:block;width:100%;height:calc(100% - 50px);touch-action:none;background:#fff}
+body{display:flex;flex-direction:column}
+
+@media (max-width:600px){
+  .toolbar{flex-wrap:wrap}
+}
+
+/* Gallery panel */
+#galleryPanel{position:fixed;right:0;top:50px;width:340px;height:calc(100% - 60px);background:#fff;border-left:1px solid #ddd;box-shadow:-4px 0 8px rgba(0,0,0,0.06);padding:8px;overflow:auto;z-index:50}
+.hidden{display:none}
+.galleryHeader{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px}
+.galleryItems{display:flex;flex-wrap:wrap;gap:8px}
+.galleryItems .item{width:100px;display:flex;flex-direction:column;align-items:center}
+.galleryItems img{width:100px;height:70px;object-fit:cover;border:1px solid #ccc;border-radius:4px;cursor:pointer}
+.galleryItems .item button{margin-top:4px;padding:4px 6px;font-size:12px}
+

@@ -1,0 +1,36 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>DrawApp — HTML5 Canvas</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div class="toolbar">
+    <input type="color" id="color" title="Цвет" value="#000000">
+    <label class="label">Кисть <input id="size" type="range" min="1" max="80" value="5"></label>
+    <button id="eraser" title="Ластик">Ластик</button>
+    <button id="undo" title="Назад">Отменить</button>
+    <button id="clear" title="Очистить">Очистить</button>
+    <button id="save" title="Сохранить PNG">Скачать PNG</button>
+    <button id="saveGallery" title="Сохранить в галерею">Сохранить в галерею</button>
+    <button id="openGallery" title="Открыть галерею">Галерея</button>
+  </div>
+
+  <canvas id="canvas"></canvas>
+
+  <div id="galleryPanel" class="hidden">
+    <div class="galleryHeader">
+      <strong>Галерея</strong>
+      <div class="galleryControls">
+        <button id="clearGallery">Очистить галерею</button>
+        <button id="closeGallery">Закрыть</button>
+      </div>
+    </div>
+    <div id="galleryItems" class="galleryItems"></div>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>
