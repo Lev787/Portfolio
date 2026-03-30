@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Neural-Synth</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <div class="app-shell">
+      <canvas id="synth-canvas" aria-label="Neural Synth canvas"></canvas>
+
+      <aside class="control-panel">
+        <div class="panel-header">
+          <p class="eyebrow">Visual music instrument</p>
+          <h1>Neural-Synth</h1>
+          <p class="panel-copy">
+            Paint tones, mirror gestures, drop gravity loops, and build a
+            living audio sketch.
+          </p>
+        </div>
+
+        <section class="panel-section">
+          <div class="section-head">
+            <h2>Color Instrument</h2>
+            <span id="instrument-label" class="section-value">Bright Synth</span>
+          </div>
+          <div class="swatch-grid" id="color-palette">
+            <button class="swatch is-active" data-color="yellow" title="Bright Synth">
+              <span class="swatch-chip swatch-yellow"></span>
+            </button>
+            <button class="swatch" data-color="red" title="Aggressive Bass">
+              <span class="swatch-chip swatch-red"></span>
+            </button>
+            <button class="swatch" data-color="blue" title="Soft Piano">
+              <span class="swatch-chip swatch-blue"></span>
+            </button>
+            <button class="swatch" data-color="green" title="Glass Bell">
+              <span class="swatch-chip swatch-green"></span>
+            </button>
+            <button class="swatch" data-color="violet" title="Dream Pad">
+              <span class="swatch-chip swatch-violet"></span>
+            </button>
+          </div>
+        </section>
+
+        <section class="panel-section">
+          <div class="section-head">
+            <h2>Modes</h2>
+            <span id="mode-label" class="section-value">Brush</span>
+          </div>
+          <div class="toggle-row">
+            <button id="brush-mode" class="chip-button is-active">Brush</button>
+            <button id="magnet-mode" class="chip-button">Gravity Loops</button>
+            <button id="symmetry-toggle" class="chip-button">Symmetry x4</button>
+          </div>
+        </section>
+
+        <section class="panel-section">
+          <div class="section-head">
+            <h2>Actions</h2>
+            <span id="record-label" class="section-value">Loop idle</span>
+          </div>
+          <div class="action-grid">
+            <button id="audio-toggle" class="action-button primary">
+              Enable Audio
+            </button>
+            <button id="record-toggle" class="action-button">Record 5s</button>
+            <button id="clear-button" class="action-button">Shake / Clear</button>
+          </div>
+        </section>
+
+        <section class="panel-section stats">
+          <div class="stat-card">
+            <span class="stat-label">Paint density</span>
+            <strong id="density-value">0%</strong>
+          </div>
+          <div class="stat-card">
+            <span class="stat-label">Pitch zone</span>
+            <strong id="pitch-value">A4</strong>
+          </div>
+        </section>
+
+        <p id="status-line" class="status-line">
+          Draw on the canvas to map position to pitch and speed to loudness.
+        </p>
+      </aside>
+    </div>
+
+    <script src="app.js"></script>
+  </body>
+</html>
