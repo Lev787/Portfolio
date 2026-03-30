@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>10 Typing Ghost</title>
+  <style>
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      min-height: 100vh;
+      display: grid;
+      place-items: center;
+      font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+      color: #eef6ff;
+      background:
+        radial-gradient(circle at top, rgba(138, 247, 255, 0.18), transparent 24%),
+        radial-gradient(circle at bottom right, rgba(255, 164, 193, 0.14), transparent 22%),
+        linear-gradient(135deg, #050914, #10182b 52%, #09111c);
+      padding: 24px;
+    }
+    .panel {
+      width: min(860px, 96vw);
+      border-radius: 28px;
+      padding: 28px;
+      background: rgba(8, 14, 26, 0.68);
+      border: 1px solid rgba(255, 255, 255, 0.14);
+      backdrop-filter: blur(14px);
+      box-shadow: 0 24px 50px rgba(0, 0, 0, 0.24);
+    }
+    h1 {
+      margin: 0 0 8px;
+      font-size: clamp(2rem, 5vw, 4rem);
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+    }
+    p { margin: 0 0 18px; color: #d1dcf8; line-height: 1.6; }
+    .screen {
+      min-height: 240px;
+      padding: 20px;
+      border-radius: 24px;
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      font-size: clamp(1.2rem, 3vw, 2rem);
+      line-height: 1.5;
+      letter-spacing: 0.02em;
+      word-break: break-word;
+    }
+    .screen.empty::before {
+      content: "Click anywhere here and start typing";
+      color: rgba(221, 232, 255, 0.46);
+    }
+    .ghost {
+      display: inline-block;
+      animation: rise 420ms cubic-bezier(.18,.86,.24,1) forwards;
+      opacity: 0;
+      transform: translateY(18px);
+    }
+    .break {
+      display: block;
+      height: 0.7em;
+    }
+    .controls {
+      margin-top: 16px;
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+      flex-wrap: wrap;
+      color: #9db0d5;
+      font-size: 0.96rem;
+    }
+    @keyframes rise {
+      from { opacity: 0; transform: translateY(18px); filter: blur(6px); }
+      to { opacity: 1; transform: translateY(0); filter: blur(0); }
+    }
+  </style>
+</head>
+<body>
+  <section class="panel">
+    <h1>Typing Ghost</h1>
+    <p>Type on the keyboard after clicking the panel. Characters do not appear immediately: they arrive with a short delay and float up from below.</p>
+    <div class="screen empty" id="screen" tabindex="0"></div>
+    <div class="controls">
+      <span>Keys are captured directly on this page.</span>
+      <span id="pending">Pending letters: 0</span>
+    </div>
+  </section>
+
+  <script>
+    const screen = document.getElementById("screen");
+    const pendingLabel = document.getElementById("pending");
+    const pending = [];
+    const visible = [];
+
+    function updateEmptyState() {
+      screen.classList.toggle("empty", screen.childNodes.length === 0);
+      pendingLabel.textContent = `Pending letters: ${pending.length}`;
+    }
+
+    function createNode(char) {
+      const node = document.createElement("span");
+      if (char === "\n") {
+        node.className = "break";
+      } else {
+        node.className = "ghost";
+        node.textContent = char;
+      }
+      return node;
+    }
+
+    function queueChar(char) {
+      const delay = 120 + Math.random() * 260;
+      const timer = setTimeout(() => {
+        const index = pending.findIndex((item) => item.timer === timer);
+        if (index !== -1) pending.splice(index, 1);
+        const node = createNode(char);
+        screen.appendChild(node);
+        visible.push(node);
+        updateEmptyState();
+      }, delay);
+      pending.push({ timer });
+      updateEmptyState();
+    }
+
+    function backspace() {
+      if (pending.length) {
+        const last = pending.pop();
+        clearTimeout(last.timer);
+      } else if (visible.length) {
+        const node = visible.pop();
+        node.remove();
+      }
+      updateEmptyState();
+    }
+
+    screen.addEventListener("click", () => screen.focus());
+
+    screen.addEventListener("keydown", (event) => {
+      if (event.key === "Backspace") {
+        event.preventDefault();
+        backspace();
+        return;
+      }
+      if (event.key === "Enter") {
+        event.preventDefault();
+        queueChar("\n");
+        return;
+      }
+      if (event.key.length === 1 && !event.ctrlKey && !event.metaKey && !event.altKey) {
+        event.preventDefault();
+        queueChar(event.key);
+      }
+    });
+
+    screen.focus();
+    updateEmptyState();
+  </script>
+</body>
+</html>

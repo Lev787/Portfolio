@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>15 Hover Filter Swap</title>
+  <style>
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      min-height: 100vh;
+      padding: 48px 24px 64px;
+      font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+      color: #f7fbff;
+      background:
+        radial-gradient(circle at top left, rgba(255, 225, 127, 0.14), transparent 20%),
+        radial-gradient(circle at bottom right, rgba(87, 220, 255, 0.14), transparent 22%),
+        linear-gradient(135deg, #060b14, #121b30 50%, #09111d);
+    }
+    .wrap { max-width: 1100px; margin: 0 auto; }
+    h1 {
+      margin: 0 0 10px;
+      font-size: clamp(2.2rem, 5vw, 4.2rem);
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+    }
+    p {
+      margin: 0 0 28px;
+      max-width: 700px;
+      line-height: 1.6;
+      color: #ced8f0;
+    }
+    .gallery {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 22px;
+    }
+    .card {
+      overflow: hidden;
+      border-radius: 26px;
+      background: rgba(8, 14, 26, 0.68);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      box-shadow: 0 20px 42px rgba(0, 0, 0, 0.24);
+    }
+    img {
+      width: 100%;
+      display: block;
+      aspect-ratio: 4 / 5;
+      object-fit: cover;
+      filter: grayscale(1) contrast(0.92) brightness(0.92);
+      transition: filter 260ms ease, transform 260ms ease;
+    }
+    .card:hover img {
+      filter: saturate(2.2) contrast(1.25) hue-rotate(130deg) brightness(1.05);
+      transform: scale(1.04);
+    }
+    .meta {
+      padding: 16px 18px 20px;
+      color: #d2def7;
+    }
+    .meta strong { display: block; margin-bottom: 6px; color: #fff; }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <h1>Hover Filter Swap</h1>
+    <p>Move the pointer over an image to swap its visual filter. Each picture starts in a subdued monochrome style and shifts into a neon-tinted version on hover.</p>
+    <div class="gallery" id="gallery"></div>
+  </div>
+
+  <script>
+    const pictures = [
+      {
+        title: "Synthetic Dunes",
+        text: "A warm landscape becomes electric on hover.",
+        svg: "<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 800 1000'><rect width='800' height='1000' fill='#12182e'/><circle cx='610' cy='230' r='120' fill='#ffe38a'/><path d='M0 760c120-160 220-210 370-180s240 90 430-40v460H0z' fill='#ff9b54'/><path d='M0 860c180-130 340-130 500-70s210 80 300 40v170H0z' fill='#56dbff'/></svg>"
+      },
+      {
+        title: "Glass Botanics",
+        text: "Muted leaves flip into a brighter spectral palette.",
+        svg: "<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 800 1000'><rect width='800' height='1000' fill='#0c1630'/><ellipse cx='280' cy='520' rx='120' ry='250' fill='#78ffbf'/><ellipse cx='520' cy='480' rx='120' ry='240' fill='#ff78b0'/><ellipse cx='380' cy='360' rx='110' ry='220' fill='#76dfff'/><rect x='360' y='500' width='28' height='280' rx='14' fill='#eaf5ff'/></svg>"
+      },
+      {
+        title: "Metro Poster",
+        text: "Bold blocks jump from grayscale to neon contrast.",
+        svg: "<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 800 1000'><rect width='800' height='1000' fill='#091220'/><rect x='90' y='120' width='240' height='700' rx='28' fill='#ff6b6b'/><rect x='350' y='210' width='160' height='520' rx='28' fill='#69e4ff'/><rect x='540' y='140' width='170' height='640' rx='28' fill='#ffe16a'/><circle cx='430' cy='160' r='54' fill='#f4f8ff'/></svg>"
+      }
+    ];
+
+    const gallery = document.getElementById("gallery");
+    for (const picture of pictures) {
+      const src = `data:image/svg+xml;utf8,${encodeURIComponent(picture.svg)}`;
+      const card = document.createElement("article");
+      card.className = "card";
+      card.innerHTML = `<img alt="${picture.title}" src="${src}"><div class="meta"><strong>${picture.title}</strong>${picture.text}</div>`;
+      gallery.appendChild(card);
+    }
+  </script>
+</body>
+</html>

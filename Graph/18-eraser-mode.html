@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>18 Eraser Mode</title>
+  <style>
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      min-height: 100vh;
+      overflow: hidden;
+      font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+      color: #f6fbff;
+      background: #04070d;
+    }
+    .scene,
+    .tiles {
+      position: fixed;
+      inset: 0;
+    }
+    .scene {
+      background-size: cover;
+      background-position: center;
+      filter: saturate(1.05) contrast(1.03);
+    }
+    .tiles {
+      display: grid;
+      grid-template-columns: repeat(18, 1fr);
+      grid-template-rows: repeat(10, 1fr);
+    }
+    .tile {
+      background: rgba(7, 12, 21, 0.88);
+      border: 1px solid rgba(255, 255, 255, 0.04);
+      transition: opacity 120ms ease;
+    }
+    .tile.erased {
+      opacity: 0;
+      pointer-events: none;
+    }
+    .hud {
+      position: fixed;
+      inset: 20px auto auto 20px;
+      z-index: 20;
+      max-width: 430px;
+      padding: 20px 22px;
+      border-radius: 24px;
+      background: rgba(8, 14, 26, 0.72);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      backdrop-filter: blur(12px);
+    }
+    h1 {
+      margin: 0 0 8px;
+      font-size: clamp(2rem, 5vw, 3.6rem);
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+    }
+    p { margin: 0 0 12px; color: #d5def5; line-height: 1.55; }
+    .controls {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+    button {
+      padding: 12px 18px;
+      border: none;
+      border-radius: 999px;
+      font: inherit;
+      font-weight: 700;
+      color: #07111d;
+      background: linear-gradient(135deg, #9cf6ff, #ffe082);
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+  <div class="scene" id="scene"></div>
+  <div class="tiles" id="tiles"></div>
+  <div class="hud">
+    <h1>Eraser Mode</h1>
+    <p>Move the pointer across the dark tile layer. In eraser mode, the tiles become transparent and reveal the hidden background image underneath.</p>
+    <div class="controls">
+      <button type="button" id="toggle">Eraser: ON</button>
+      <button type="button" id="reset">Reset</button>
+    </div>
+  </div>
+
+  <script>
+    const scene = document.getElementById("scene");
+    const tiles = document.getElementById("tiles");
+    const toggle = document.getElementById("toggle");
+    const reset = document.getElementById("reset");
+    let erasing = true;
+
+    const svg = "<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1600 900'><defs><linearGradient id='sky' x1='0' x2='0' y1='0' y2='1'><stop stop-color='#08172f'/><stop offset='0.55' stop-color='#194d86'/><stop offset='1' stop-color='#ffb06a'/></linearGradient></defs><rect width='1600' height='900' fill='url(#sky)'/><circle cx='1240' cy='190' r='96' fill='#ffe696'/><path d='M0 610c150-110 290-160 470-120s250 70 420 20 280-170 710-90v480H0z' fill='#132437'/><path d='M0 700c180-80 340-70 540-10s330 70 520 15 310-40 540 20v175H0z' fill='#2f845d'/><path d='M0 780c210-50 430-30 660 25s360 65 520 22 270-25 420 20v53H0z' fill='#d46f48'/></svg>";
+    scene.style.backgroundImage = `url("data:image/svg+xml;utf8,${encodeURIComponent(svg)}")`;
+
+    function buildTiles() {
+      tiles.innerHTML = "";
+      for (let i = 0; i < 180; i += 1) {
+        const tile = document.createElement("div");
+        tile.className = "tile";
+        tiles.appendChild(tile);
+      }
+    }
+
+    tiles.addEventListener("pointerover", (event) => {
+      if (!erasing || !event.target.classList.contains("tile")) return;
+      event.target.classList.add("erased");
+    });
+
+    toggle.addEventListener("click", () => {
+      erasing = !erasing;
+      toggle.textContent = `Eraser: ${erasing ? "ON" : "OFF"}`;
+    });
+
+    reset.addEventListener("click", buildTiles);
+    buildTiles();
+  </script>
+</body>
+</html>

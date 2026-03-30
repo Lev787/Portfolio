@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>06 Toggle Themes With Sound</title>
+  <style>
+    :root {
+      --bg: #0a1020;
+      --panel: rgba(12, 18, 34, 0.72);
+      --text: #eff4ff;
+      --muted: #b1bfde;
+      --accent: #8ef6ff;
+      --card: linear-gradient(145deg, rgba(21, 40, 72, 0.92), rgba(9, 18, 34, 0.8));
+    }
+    body.light {
+      --bg: #eef5ff;
+      --panel: rgba(255, 255, 255, 0.8);
+      --text: #0d1630;
+      --muted: #506280;
+      --accent: #1e78ff;
+      --card: linear-gradient(145deg, rgba(255, 255, 255, 0.92), rgba(226, 240, 255, 0.88));
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      min-height: 100vh;
+      display: grid;
+      place-items: center;
+      font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+      color: var(--text);
+      background:
+        radial-gradient(circle at top, rgba(128, 230, 255, 0.18), transparent 30%),
+        radial-gradient(circle at bottom right, rgba(255, 175, 114, 0.14), transparent 24%),
+        var(--bg);
+      transition: background 260ms ease, color 260ms ease;
+    }
+    .panel {
+      width: min(720px, 92vw);
+      padding: 30px;
+      border-radius: 30px;
+      background: var(--panel);
+      border: 1px solid rgba(255, 255, 255, 0.14);
+      backdrop-filter: blur(16px);
+      box-shadow: 0 24px 60px rgba(0, 0, 0, 0.18);
+    }
+    h1 {
+      margin: 0 0 12px;
+      font-size: clamp(2.2rem, 5vw, 4.2rem);
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+    }
+    p { margin: 0 0 24px; line-height: 1.6; color: var(--muted); }
+    .preview {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 16px;
+      margin-bottom: 26px;
+    }
+    .card {
+      padding: 20px;
+      border-radius: 24px;
+      background: var(--card);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      min-height: 140px;
+    }
+    .pill {
+      display: inline-block;
+      padding: 6px 12px;
+      border-radius: 999px;
+      background: rgba(142, 246, 255, 0.16);
+      color: var(--accent);
+      font-weight: 700;
+      margin-bottom: 12px;
+    }
+    button {
+      padding: 16px 24px;
+      border: none;
+      border-radius: 999px;
+      font: inherit;
+      font-weight: 700;
+      color: #06131f;
+      background: linear-gradient(135deg, #8ef6ff, #8dffb0);
+      cursor: pointer;
+      box-shadow: 0 12px 28px rgba(26, 196, 225, 0.22);
+    }
+  </style>
+</head>
+<body class="dark">
+  <section class="panel">
+    <h1>Theme Click</h1>
+    <p>Press the button to switch between light and dark themes. A soft synthetic click plays on every toggle, without external audio files.</p>
+    <div class="preview">
+      <article class="card"><div class="pill">Palette</div><strong>Adaptive colors</strong><p>Panel backgrounds and text adjust instantly.</p></article>
+      <article class="card"><div class="pill">Sound</div><strong>Short click</strong><p>Generated with the Web Audio API on demand.</p></article>
+      <article class="card"><div class="pill">Mood</div><strong>Day and night</strong><p>The whole scene changes in one motion.</p></article>
+    </div>
+    <button type="button" id="toggle">Toggle Theme</button>
+  </section>
+  <script>
+    const button = document.getElementById("toggle");
+    let audioContext;
+
+    function playClick() {
+      audioContext = audioContext || new (window.AudioContext || window.webkitAudioContext)();
+      const now = audioContext.currentTime;
+      const gain = audioContext.createGain();
+      gain.gain.setValueAtTime(0.0001, now);
+      gain.gain.exponentialRampToValueAtTime(0.16, now + 0.01);
+      gain.gain.exponentialRampToValueAtTime(0.0001, now + 0.18);
+      gain.connect(audioContext.destination);
+
+      const oscA = audioContext.createOscillator();
+      oscA.type = "triangle";
+      oscA.frequency.setValueAtTime(640, now);
+      oscA.frequency.exponentialRampToValueAtTime(380, now + 0.16);
+      oscA.connect(gain);
+      oscA.start(now);
+      oscA.stop(now + 0.18);
+
+      const oscB = audioContext.createOscillator();
+      oscB.type = "sine";
+      oscB.frequency.setValueAtTime(920, now);
+      oscB.frequency.exponentialRampToValueAtTime(560, now + 0.12);
+      oscB.connect(gain);
+      oscB.start(now);
+      oscB.stop(now + 0.14);
+    }
+
+    button.addEventListener("click", async () => {
+      if (audioContext && audioContext.state === "suspended") await audioContext.resume();
+      document.body.classList.toggle("light");
+      playClick();
+    });
+  </script>
+</body>
+</html>

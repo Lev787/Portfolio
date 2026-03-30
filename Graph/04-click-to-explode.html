@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>04 Click-to-Explode</title>
+  <style>
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      min-height: 100vh;
+      overflow: hidden;
+      font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+      color: #f9fbff;
+      background:
+        radial-gradient(circle at top, rgba(255, 188, 74, 0.16), transparent 28%),
+        radial-gradient(circle at bottom right, rgba(92, 130, 255, 0.18), transparent 24%),
+        linear-gradient(135deg, #090914, #16112b 48%, #0e1a34);
+      cursor: pointer;
+    }
+    .hud {
+      position: fixed;
+      top: 24px;
+      left: 24px;
+      padding: 18px 22px;
+      border-radius: 22px;
+      background: rgba(9, 13, 24, 0.64);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      max-width: 420px;
+      backdrop-filter: blur(12px);
+      z-index: 10;
+    }
+    h1 {
+      margin: 0 0 8px;
+      font-size: clamp(2rem, 5vw, 3.6rem);
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+    }
+    p { margin: 0; color: #d7e2ff; line-height: 1.55; }
+    .piece {
+      position: fixed;
+      left: 0;
+      top: 0;
+      width: 14px;
+      height: 14px;
+      border-radius: 50%;
+      pointer-events: none;
+      background: hsl(var(--hue) 95% 64%);
+      box-shadow: 0 0 20px hsl(var(--hue) 95% 64% / 0.55);
+      animation: explode 720ms cubic-bezier(.17,.82,.26,1) forwards;
+    }
+    .piece.square {
+      border-radius: 3px;
+      transform: rotate(15deg);
+    }
+    .piece.ring {
+      background: transparent;
+      border: 3px solid hsl(var(--hue) 95% 72%);
+      box-shadow: none;
+    }
+    @keyframes explode {
+      from {
+        transform: translate(-50%, -50%) scale(0.5);
+        opacity: 1;
+      }
+      to {
+        transform: translate(calc(-50% + var(--dx)), calc(-50% + var(--dy))) rotate(var(--rot)) scale(0.1);
+        opacity: 0;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="hud">
+    <h1>Click to Explode</h1>
+    <p>Click anywhere on the screen. A colorful burst of circles, rings, and squares shoots outward from the selected point.</p>
+  </div>
+  <script>
+    const variants = ["", "square", "ring"];
+
+    function spawnBurst(x, y) {
+      const total = 22;
+      for (let i = 0; i < total; i += 1) {
+        const angle = (Math.PI * 2 * i) / total + Math.random() * 0.25;
+        const distance = 70 + Math.random() * 120;
+        const piece = document.createElement("div");
+        const kind = variants[Math.floor(Math.random() * variants.length)];
+        piece.className = `piece ${kind}`.trim();
+        piece.style.left = `${x}px`;
+        piece.style.top = `${y}px`;
+        piece.style.width = `${10 + Math.random() * 14}px`;
+        piece.style.height = piece.style.width;
+        piece.style.setProperty("--dx", `${Math.cos(angle) * distance}px`);
+        piece.style.setProperty("--dy", `${Math.sin(angle) * distance}px`);
+        piece.style.setProperty("--rot", `${(Math.random() - 0.5) * 360}deg`);
+        piece.style.setProperty("--hue", String(20 + Math.random() * 300));
+        piece.addEventListener("animationend", () => piece.remove(), { once: true });
+        document.body.appendChild(piece);
+      }
+    }
+
+    window.addEventListener("pointerdown", (event) => spawnBurst(event.clientX, event.clientY));
+  </script>
+</body>
+</html>

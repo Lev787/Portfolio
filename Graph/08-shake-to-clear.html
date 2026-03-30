@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>08 Shake to Clear</title>
+  <style>
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      min-height: 100vh;
+      overflow: hidden;
+      font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+      color: #f6fbff;
+      background:
+        radial-gradient(circle at 20% 20%, rgba(127, 255, 212, 0.18), transparent 18%),
+        radial-gradient(circle at 80% 30%, rgba(255, 132, 170, 0.18), transparent 18%),
+        linear-gradient(135deg, #07101c, #112138 48%, #09111d);
+    }
+    .hud {
+      position: fixed;
+      inset: 20px auto auto 20px;
+      max-width: 420px;
+      padding: 20px 22px;
+      border-radius: 24px;
+      background: rgba(8, 14, 26, 0.68);
+      border: 1px solid rgba(255, 255, 255, 0.14);
+      backdrop-filter: blur(12px);
+      z-index: 20;
+    }
+    h1 {
+      margin: 0 0 8px;
+      font-size: clamp(2rem, 4vw, 3.4rem);
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+    }
+    p { margin: 0 0 12px; line-height: 1.55; color: #d1dcff; }
+    button {
+      padding: 12px 18px;
+      border: none;
+      border-radius: 999px;
+      font: inherit;
+      font-weight: 700;
+      color: #08111d;
+      background: linear-gradient(135deg, #99f5ff, #9cffc3);
+      cursor: pointer;
+    }
+    #status {
+      margin-top: 10px;
+      color: #8ef4ff;
+      font-weight: 700;
+    }
+    .piece {
+      position: absolute;
+      width: 160px;
+      padding: 18px;
+      border-radius: 22px;
+      background: rgba(255, 255, 255, 0.92);
+      color: #10203a;
+      box-shadow: 0 18px 35px rgba(0, 0, 0, 0.22);
+      transform: rotate(var(--tilt));
+      transition: transform 200ms ease;
+      user-select: none;
+    }
+    .piece strong { display: block; margin-bottom: 8px; }
+    .piece.drop {
+      animation: fall 1100ms cubic-bezier(.28,.9,.36,1) forwards;
+      animation-delay: var(--delay);
+    }
+    @keyframes fall {
+      to {
+        transform: translateY(120vh) rotate(calc(var(--tilt) + var(--spin)));
+        opacity: 0;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="hud">
+    <h1>Shake to Clear</h1>
+    <p>Whip the mouse quickly left and right several times. When the motion is strong enough, every floating note drops off the page.</p>
+    <button type="button" id="reset">Reset Scene</button>
+    <div id="status">Status: waiting for a shake</div>
+  </div>
+
+  <script>
+    const notes = [
+      { x: 10, y: 22, title: "Card 01", text: "Move left and right quickly." },
+      { x: 34, y: 16, title: "Card 02", text: "Rapid direction changes trigger the effect." },
+      { x: 62, y: 24, title: "Card 03", text: "Each note will fall with its own delay." },
+      { x: 18, y: 52, title: "Card 04", text: "Use the reset button to bring them back." },
+      { x: 48, y: 48, title: "Card 05", text: "This demo reacts to sideways shaking." },
+      { x: 74, y: 58, title: "Card 06", text: "A classroom-friendly interaction trick." }
+    ];
+
+    const statusLabel = document.getElementById("status");
+    const resetButton = document.getElementById("reset");
+    const pieces = [];
+    const shakeMoves = [];
+    let lastX = null;
+    let lastY = null;
+    let lastTime = 0;
+    let cleared = false;
+
+    function buildScene() {
+      for (const piece of pieces) piece.remove();
+      pieces.length = 0;
+      for (const note of notes) {
+        const card = document.createElement("article");
+        card.className = "piece";
+        card.innerHTML = `<strong>${note.title}</strong><div>${note.text}</div>`;
+        card.style.left = `${note.x}vw`;
+        card.style.top = `${note.y}vh`;
+        card.style.setProperty("--tilt", `${(Math.random() - 0.5) * 10}deg`);
+        card.style.setProperty("--spin", `${(Math.random() - 0.5) * 80}deg`);
+        card.style.setProperty("--delay", `${Math.random() * 160}ms`);
+        document.body.appendChild(card);
+        pieces.push(card);
+      }
+      cleared = false;
+      lastX = null;
+      lastY = null;
+      lastTime = 0;
+      shakeMoves.length = 0;
+      statusLabel.textContent = "Status: waiting for a shake";
+    }
+
+    function triggerClear() {
+      if (cleared) return;
+      cleared = true;
+      for (const piece of pieces) piece.classList.add("drop");
+      statusLabel.textContent = "Status: cleared";
+    }
+
+    function updateShakeStatus(progress) {
+      const percent = Math.min(100, Math.round(progress * 100));
+      statusLabel.textContent = `Status: shake power ${percent}%`;
+    }
+
+    window.addEventListener("pointermove", (event) => {
+      if (cleared) return;
+
+      const now = performance.now();
+      if (lastX == null) {
+        lastX = event.clientX;
+        lastY = event.clientY;
+        lastTime = now;
+        return;
+      }
+
+      const dx = event.clientX - lastX;
+      const dy = event.clientY - lastY;
+      const dt = now - lastTime;
+      lastX = event.clientX;
+      lastY = event.clientY;
+      lastTime = now;
+
+      if (dt > 260) {
+        shakeMoves.length = 0;
+        statusLabel.textContent = "Status: waiting for a shake";
+      }
+
+      const horizontal = Math.abs(dx);
+      const vertical = Math.abs(dy);
+      const isStrongHorizontalMove = horizontal >= 12 && horizontal > vertical * 1.15;
+      if (!isStrongHorizontalMove) return;
+
+      shakeMoves.push({ time: now, dir: Math.sign(dx), power: horizontal });
+      while (shakeMoves.length && now - shakeMoves[0].time > 700) {
+        shakeMoves.shift();
+      }
+
+      let reversals = 0;
+      let power = 0;
+      for (let i = 0; i < shakeMoves.length; i += 1) {
+        power += shakeMoves[i].power;
+        if (i > 0 && shakeMoves[i].dir !== shakeMoves[i - 1].dir) {
+          reversals += 1;
+        }
+      }
+
+      const progress = Math.max(reversals / 4, power / 180);
+      updateShakeStatus(progress);
+
+      if (reversals >= 4 && power >= 180) {
+        triggerClear();
+      }
+    });
+
+    window.addEventListener("pointerleave", () => {
+      lastX = null;
+      lastY = null;
+      lastTime = 0;
+      shakeMoves.length = 0;
+      if (!cleared) statusLabel.textContent = "Status: waiting for a shake";
+    });
+
+    resetButton.addEventListener("click", buildScene);
+    buildScene();
+  </script>
+</body>
+</html>

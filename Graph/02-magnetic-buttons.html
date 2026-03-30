@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>02 Magnetic Buttons</title>
+  <style>
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      min-height: 100vh;
+      display: grid;
+      place-items: center;
+      overflow: hidden;
+      font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+      background:
+        radial-gradient(circle at 20% 20%, rgba(80, 255, 182, 0.2), transparent 20%),
+        radial-gradient(circle at 80% 70%, rgba(114, 151, 255, 0.18), transparent 22%),
+        linear-gradient(135deg, #050915, #101f2e 52%, #07111d);
+      color: #eef6ff;
+    }
+    .scene { width: min(920px, 92vw); text-align: center; }
+    h1 {
+      margin: 0 0 10px;
+      font-size: clamp(2.2rem, 5vw, 4.3rem);
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+    }
+    p {
+      margin: 0 auto 32px;
+      max-width: 620px;
+      color: #b8c7ea;
+      line-height: 1.6;
+    }
+    .row {
+      display: flex;
+      gap: 22px;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+    button {
+      position: relative;
+      padding: 18px 28px;
+      min-width: 180px;
+      border: none;
+      border-radius: 999px;
+      font: inherit;
+      font-weight: 700;
+      letter-spacing: 0.03em;
+      color: #06131f;
+      background: linear-gradient(135deg, #8af6ff, #a8ffa7);
+      box-shadow: 0 14px 34px rgba(18, 210, 228, 0.24);
+      transition: transform 140ms ease, box-shadow 140ms ease;
+      will-change: transform;
+    }
+    button:hover { box-shadow: 0 18px 40px rgba(18, 210, 228, 0.34); }
+  </style>
+</head>
+<body>
+  <div class="scene">
+    <h1>Magnetic Buttons</h1>
+    <p>Bring the cursor close to any button and it will lean toward the pointer by a few pixels, as if it were gently pulled by a magnet.</p>
+    <div class="row">
+      <button type="button">Launch</button>
+      <button type="button">Preview</button>
+      <button type="button">Download</button>
+      <button type="button">Contact</button>
+    </div>
+  </div>
+  <script>
+    const buttons = [...document.querySelectorAll("button")];
+    const reach = 180;
+
+    function updateButton(button, x, y) {
+      const rect = button.getBoundingClientRect();
+      const cx = rect.left + rect.width / 2;
+      const cy = rect.top + rect.height / 2;
+      const dx = x - cx;
+      const dy = y - cy;
+      const distance = Math.hypot(dx, dy);
+      if (distance > reach) {
+        button.style.transform = "translate(0px, 0px)";
+        return;
+      }
+      const force = (1 - distance / reach) * 18;
+      const angle = Math.atan2(dy, dx);
+      button.style.transform = `translate(${Math.cos(angle) * force}px, ${Math.sin(angle) * force}px)`;
+    }
+
+    window.addEventListener("pointermove", (event) => {
+      for (const button of buttons) updateButton(button, event.clientX, event.clientY);
+    });
+
+    window.addEventListener("pointerleave", () => {
+      for (const button of buttons) button.style.transform = "translate(0px, 0px)";
+    });
+  </script>
+</body>
+</html>

@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>JS Graphics Effects Collection</title>
+  <style>
+    :root {
+      --bg: #09111f;
+      --panel: rgba(10, 18, 34, 0.72);
+      --border: rgba(255, 255, 255, 0.14);
+      --text: #f3f6ff;
+      --muted: #9ca8c7;
+      --accent: #7ee1ff;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      min-height: 100vh;
+      font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+      color: var(--text);
+      background:
+        radial-gradient(circle at top, rgba(98, 210, 255, 0.2), transparent 38%),
+        radial-gradient(circle at bottom right, rgba(255, 118, 148, 0.18), transparent 28%),
+        linear-gradient(135deg, #060b15, #101f39 48%, #09111f);
+      padding: 40px 24px 72px;
+    }
+    .wrap { max-width: 1200px; margin: 0 auto; }
+    h1 {
+      margin: 0 0 12px;
+      font-size: clamp(2.3rem, 5vw, 4rem);
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+    }
+    .intro {
+      max-width: 760px;
+      margin: 0 0 28px;
+      color: var(--muted);
+      line-height: 1.6;
+      font-size: 1.05rem;
+    }
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 18px;
+    }
+    a.card {
+      display: block;
+      padding: 20px;
+      border-radius: 22px;
+      background: var(--panel);
+      border: 1px solid var(--border);
+      color: inherit;
+      text-decoration: none;
+      backdrop-filter: blur(12px);
+      box-shadow: 0 18px 45px rgba(0, 0, 0, 0.24);
+      transition: transform 180ms ease, border-color 180ms ease, background 180ms ease;
+    }
+    a.card:hover {
+      transform: translateY(-6px);
+      border-color: rgba(126, 225, 255, 0.55);
+      background: rgba(14, 28, 52, 0.85);
+    }
+    .num {
+      display: inline-flex;
+      width: 42px;
+      height: 42px;
+      border-radius: 50%;
+      align-items: center;
+      justify-content: center;
+      background: rgba(126, 225, 255, 0.14);
+      color: var(--accent);
+      font-weight: 700;
+      margin-bottom: 14px;
+    }
+    .title { margin: 0 0 8px; font-size: 1.1rem; }
+    .desc { margin: 0; color: var(--muted); line-height: 1.45; font-size: 0.96rem; }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <h1>20 JS Effect Demos</h1>
+    <p class="intro">
+      Each assignment is implemented as a standalone HTML file. Open any card below to test the effect directly in the browser.
+    </p>
+    <div class="grid">
+      <a class="card" href="01-cursor-trail.html"><div class="num">01</div><h2 class="title">Cursor Trail</h2><p class="desc">Pointer sparks and geometric traces that fade over time.</p></a>
+      <a class="card" href="02-magnetic-buttons.html"><div class="num">02</div><h2 class="title">Magnetic Buttons</h2><p class="desc">Buttons subtly move toward the approaching cursor.</p></a>
+      <a class="card" href="03-dynamic-background-gradient.html"><div class="num">03</div><h2 class="title">Dynamic Background Gradient</h2><p class="desc">Background colors shift according to pointer position.</p></a>
+      <a class="card" href="04-click-to-explode.html"><div class="num">04</div><h2 class="title">Click-to-Explode</h2><p class="desc">Click anywhere to launch particles in every direction.</p></a>
+      <a class="card" href="05-scroll-driven-scaling.html"><div class="num">05</div><h2 class="title">Scroll-Driven Scaling</h2><p class="desc">Design elements grow and shrink as the page scrolls.</p></a>
+      <a class="card" href="06-toggle-themes-with-sound.html"><div class="num">06</div><h2 class="title">Toggle Themes With Sound</h2><p class="desc">Switch themes with a synthesized click effect.</p></a>
+      <a class="card" href="07-hover-glitch-effect.html"><div class="num">07</div><h2 class="title">Hover-Glitch Effect</h2><p class="desc">Hovering images makes them shake and shift in color.</p></a>
+      <a class="card" href="08-shake-to-clear.html"><div class="num">08</div><h2 class="title">Shake to Clear</h2><p class="desc">Fast side-to-side movement clears the whole scene.</p></a>
+      <a class="card" href="09-custom-cursor-shape.html"><div class="num">09</div><h2 class="title">Custom Cursor Shape</h2><p class="desc">A rotating custom cursor replaces the default pointer.</p></a>
+      <a class="card" href="10-typing-ghost.html"><div class="num">10</div><h2 class="title">Typing Ghost</h2><p class="desc">Typed letters appear later and rise gently from below.</p></a>
+      <a class="card" href="11-sticker-slap.html"><div class="num">11</div><h2 class="title">Sticker Slap</h2><p class="desc">Every click stamps a random sticker with a random tilt.</p></a>
+      <a class="card" href="12-color-splash.html"><div class="num">12</div><h2 class="title">Color Splash</h2><p class="desc">Hold the pointer down to grow a glowing color stain.</p></a>
+      <a class="card" href="13-dragging-physics.html"><div class="num">13</div><h2 class="title">Dragging Physics</h2><p class="desc">Heavy objects drag with inertia and delayed motion.</p></a>
+      <a class="card" href="14-auto-chaos-rotation.html"><div class="num">14</div><h2 class="title">Auto-Chaos Rotation</h2><p class="desc">Floating panels rotate slowly at different speeds.</p></a>
+      <a class="card" href="15-hover-filter-swap.html"><div class="num">15</div><h2 class="title">Hover Filter Swap</h2><p class="desc">Images switch from monochrome to neon-filtered states.</p></a>
+      <a class="card" href="16-text-shadow-follow.html"><div class="num">16</div><h2 class="title">Text Shadow Follow</h2><p class="desc">Heading shadows always point away from the cursor.</p></a>
+      <a class="card" href="17-z-index-shuffle.html"><div class="num">17</div><h2 class="title">Z-Index Shuffle</h2><p class="desc">Clicked elements jump to the front of the stack.</p></a>
+      <a class="card" href="18-eraser-mode.html"><div class="num">18</div><h2 class="title">Eraser Mode</h2><p class="desc">Hover to erase cover tiles and reveal the background.</p></a>
+      <a class="card" href="19-key-sound-piano.html"><div class="num">19</div><h2 class="title">Key-Sound Piano</h2><p class="desc">Every key press plays a short random synth note.</p></a>
+      <a class="card" href="20-screen-edge-warp.html"><div class="num">20</div><h2 class="title">Screen Edge Warp</h2><p class="desc">Dragged objects reappear on the opposite edge.</p></a>
+    </div>
+  </div>
+</body>
+</html>

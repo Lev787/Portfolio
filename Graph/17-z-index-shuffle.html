@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>17 Z-Index Shuffle</title>
+  <style>
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      min-height: 100vh;
+      overflow: hidden;
+      font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+      color: #f5f9ff;
+      background:
+        radial-gradient(circle at top left, rgba(255, 216, 121, 0.16), transparent 20%),
+        radial-gradient(circle at bottom right, rgba(92, 221, 255, 0.16), transparent 24%),
+        linear-gradient(135deg, #060c15, #131d32 50%, #09111d);
+    }
+    .hud {
+      position: fixed;
+      inset: 20px auto auto 20px;
+      z-index: 50;
+      max-width: 430px;
+      padding: 20px 22px;
+      border-radius: 24px;
+      background: rgba(8, 14, 26, 0.68);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      backdrop-filter: blur(12px);
+    }
+    h1 {
+      margin: 0 0 8px;
+      font-size: clamp(2rem, 5vw, 3.8rem);
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+    }
+    p { margin: 0; color: #d5def5; line-height: 1.55; }
+    .card {
+      position: absolute;
+      width: 240px;
+      padding: 22px;
+      border-radius: 26px;
+      background: rgba(255, 255, 255, 0.92);
+      color: #0d1830;
+      box-shadow: 0 22px 40px rgba(0, 0, 0, 0.24);
+      cursor: pointer;
+      user-select: none;
+      transition: transform 180ms ease;
+    }
+    .card:active { transform: scale(0.98); }
+    .card strong { display: block; margin-bottom: 8px; }
+  </style>
+</head>
+<body>
+  <div class="hud" id="hud">
+    <h1>Z-Index Shuffle</h1>
+    <p>Click any overlapping card. The selected element jumps to the front by receiving the highest z-index, demonstrating the layer order visually.</p>
+  </div>
+
+  <script>
+    const hud = document.getElementById("hud");
+    const data = [
+      { title: "Layer A", text: "Click me to come forward.", dx: -170, dy: -60, bg: "rgba(255, 234, 176, 0.94)" },
+      { title: "Layer B", text: "The stack order changes on click.", dx: -80, dy: 55, bg: "rgba(159, 247, 255, 0.94)" },
+      { title: "Layer C", text: "This card can cover the others.", dx: 40, dy: -20, bg: "rgba(255, 182, 210, 0.94)" },
+      { title: "Layer D", text: "Bring me to the very top.", dx: 180, dy: 50, bg: "rgba(189, 255, 194, 0.94)" },
+      { title: "Layer E", text: "Frontmost card wins the overlap.", dx: 250, dy: -70, bg: "rgba(198, 204, 255, 0.94)" }
+    ];
+    let topLayer = 1;
+    const cards = [];
+
+    for (const item of data) {
+      const card = document.createElement("article");
+      card.className = "card";
+      card.style.background = item.bg;
+      card.style.zIndex = String(topLayer++);
+      card.innerHTML = `<strong>${item.title}</strong><div>${item.text}</div>`;
+      card.addEventListener("click", () => {
+        card.style.zIndex = String(++topLayer);
+      });
+      document.body.appendChild(card);
+      cards.push({ element: card, dx: item.dx, dy: item.dy });
+    }
+
+    function layoutCards() {
+      const hudRect = hud.getBoundingClientRect();
+      const safeTop = hudRect.bottom + 34;
+      const safeBottom = 34;
+      const cardWidth = cards[0]?.element.offsetWidth ?? 240;
+      const cardHeight = cards[0]?.element.offsetHeight ?? 120;
+      const centerX = window.innerWidth / 2 - cardWidth / 2;
+      const minY = safeTop;
+      const maxY = Math.max(minY, window.innerHeight - cardHeight - safeBottom);
+      const centerY = Math.min(Math.max((window.innerHeight - cardHeight) / 2, minY), maxY);
+
+      for (const card of cards) {
+        const x = Math.min(
+          Math.max(centerX + card.dx, 24),
+          window.innerWidth - cardWidth - 24
+        );
+        const y = Math.min(
+          Math.max(centerY + card.dy, minY),
+          maxY
+        );
+        card.element.style.left = `${x}px`;
+        card.element.style.top = `${y}px`;
+      }
+    }
+
+    window.addEventListener("resize", layoutCards);
+    layoutCards();
+  </script>
+</body>
+</html>

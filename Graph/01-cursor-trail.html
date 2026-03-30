@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>01 Cursor Trail</title>
+  <style>
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      overflow: hidden;
+      min-height: 100vh;
+      font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+      background:
+        radial-gradient(circle at top, rgba(96, 212, 255, 0.16), transparent 32%),
+        linear-gradient(145deg, #040812, #0d1830 52%, #130d27);
+      color: #f7fbff;
+      cursor: crosshair;
+    }
+    .hud {
+      position: fixed;
+      inset: 24px auto auto 24px;
+      padding: 18px 20px;
+      border-radius: 20px;
+      background: rgba(10, 16, 30, 0.64);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      backdrop-filter: blur(12px);
+      z-index: 10;
+    }
+    h1 {
+      margin: 0 0 8px;
+      font-size: clamp(2rem, 4vw, 3.3rem);
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+    }
+    p {
+      margin: 0;
+      max-width: 360px;
+      line-height: 1.55;
+      color: #c6d3ff;
+    }
+    .particle {
+      position: fixed;
+      pointer-events: none;
+      left: 0;
+      top: 0;
+      animation: drift 900ms ease-out forwards;
+      opacity: 0.9;
+      will-change: transform, opacity;
+    }
+    .circle {
+      border-radius: 50%;
+      background: hsla(var(--hue), 95%, 68%, 0.86);
+      box-shadow: 0 0 22px hsla(var(--hue), 95%, 68%, 0.45);
+    }
+    .square {
+      background: hsla(var(--hue), 92%, 70%, 0.78);
+      transform: rotate(24deg);
+      box-shadow: 0 0 18px hsla(var(--hue), 92%, 70%, 0.42);
+    }
+    .triangle {
+      width: 0;
+      height: 0;
+      border-left: calc(var(--size) / 2) solid transparent;
+      border-right: calc(var(--size) / 2) solid transparent;
+      border-bottom: var(--size) solid hsla(var(--hue), 92%, 70%, 0.82);
+      filter: drop-shadow(0 0 18px hsla(var(--hue), 92%, 70%, 0.38));
+    }
+    @keyframes drift {
+      from {
+        transform: translate(-50%, -50%) scale(1) rotate(0deg);
+        opacity: 0.95;
+      }
+      to {
+        transform: translate(calc(-50% + var(--dx)), calc(-50% + var(--dy))) scale(0.1) rotate(var(--rot));
+        opacity: 0;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="hud">
+    <h1>Cursor Trail</h1>
+    <p>Move the mouse or drag a finger across the screen. Geometric sparks appear behind the pointer and fade away smoothly.</p>
+  </div>
+  <script>
+    const shapes = ["circle", "square", "triangle"];
+
+    function spawnParticle(x, y) {
+      const particle = document.createElement("div");
+      const shape = shapes[Math.floor(Math.random() * shapes.length)];
+      const size = 8 + Math.random() * 20;
+      particle.className = `particle ${shape}`;
+      particle.style.setProperty("--size", `${size}px`);
+      particle.style.setProperty("--hue", String(180 + Math.random() * 170));
+      particle.style.setProperty("--dx", `${(Math.random() - 0.5) * 90}px`);
+      particle.style.setProperty("--dy", `${(Math.random() - 0.5) * 90}px`);
+      particle.style.setProperty("--rot", `${(Math.random() - 0.5) * 320}deg`);
+      particle.style.left = `${x}px`;
+      particle.style.top = `${y}px`;
+      if (shape !== "triangle") {
+        particle.style.width = `${size}px`;
+        particle.style.height = `${size}px`;
+      }
+      particle.addEventListener("animationend", () => particle.remove(), { once: true });
+      document.body.appendChild(particle);
+    }
+
+    let lastTime = 0;
+    function trail(event) {
+      const point = event.touches ? event.touches[0] : event;
+      const now = performance.now();
+      if (now - lastTime < 14) return;
+      lastTime = now;
+      spawnParticle(point.clientX, point.clientY);
+    }
+
+    window.addEventListener("pointermove", trail);
+    window.addEventListener("touchmove", trail, { passive: true });
+  </script>
+</body>
+</html>

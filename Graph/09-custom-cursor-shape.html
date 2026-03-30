@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>09 Custom Cursor Shape</title>
+  <style>
+    * { box-sizing: border-box; cursor: none; }
+    body {
+      margin: 0;
+      min-height: 100vh;
+      overflow: hidden;
+      font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+      background:
+        radial-gradient(circle at top right, rgba(255, 152, 91, 0.18), transparent 22%),
+        radial-gradient(circle at bottom left, rgba(88, 229, 255, 0.18), transparent 24%),
+        linear-gradient(135deg, #060a14, #121c31 48%, #09111d);
+      color: #f5f9ff;
+    }
+    .hero {
+      min-height: 100vh;
+      display: grid;
+      place-items: center;
+      text-align: center;
+      padding: 24px;
+    }
+    h1 {
+      margin: 0 0 10px;
+      font-size: clamp(2.4rem, 6vw, 5rem);
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+    }
+    p {
+      margin: 0 auto 26px;
+      max-width: 700px;
+      line-height: 1.6;
+      color: #cbd5ee;
+    }
+    .chips {
+      display: flex;
+      gap: 14px;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+    .chip {
+      padding: 14px 20px;
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.08);
+      border: 1px solid rgba(255, 255, 255, 0.14);
+      backdrop-filter: blur(10px);
+    }
+    .cursor,
+    .ring {
+      position: fixed;
+      left: 0;
+      top: 0;
+      pointer-events: none;
+      z-index: 99;
+      transform: translate(-50%, -50%);
+    }
+    .cursor {
+      width: 34px;
+      height: 34px;
+      border-radius: 10px;
+      border: 2px solid rgba(143, 240, 255, 0.95);
+      background:
+        linear-gradient(135deg, rgba(143, 240, 255, 0.28), rgba(255, 142, 190, 0.22));
+      box-shadow: 0 0 22px rgba(143, 240, 255, 0.28);
+      transform-origin: center;
+      opacity: 0;
+      transition: opacity 180ms ease;
+    }
+    .cursor::before {
+      content: "";
+      position: absolute;
+      inset: 8px;
+      border-radius: 6px;
+      background: rgba(255, 255, 255, 0.82);
+    }
+    .ring {
+      width: 70px;
+      height: 70px;
+      border-radius: 50%;
+      border: 1px solid rgba(255, 255, 255, 0.24);
+      opacity: 0;
+      transition: opacity 180ms ease;
+    }
+  </style>
+</head>
+<body>
+  <div class="hero">
+    <div>
+      <h1>Custom Cursor</h1>
+      <p>The native pointer is replaced by a rotating geometric object. Move the mouse quickly and the cursor turns toward its direction of travel.</p>
+      <div class="chips">
+        <div class="chip">Rotates by velocity</div>
+        <div class="chip">Trailing outer ring</div>
+        <div class="chip">No external assets</div>
+      </div>
+    </div>
+  </div>
+  <div class="ring" id="ring"></div>
+  <div class="cursor" id="cursor"></div>
+
+  <script>
+    const cursor = document.getElementById("cursor");
+    const ring = document.getElementById("ring");
+    const state = { x: window.innerWidth / 2, y: window.innerHeight / 2, rx: window.innerWidth / 2, ry: window.innerHeight / 2, angle: 0 };
+    let lastX = state.x;
+    let lastY = state.y;
+
+    window.addEventListener("pointermove", (event) => {
+      const dx = event.clientX - lastX;
+      const dy = event.clientY - lastY;
+      lastX = event.clientX;
+      lastY = event.clientY;
+      state.x = event.clientX;
+      state.y = event.clientY;
+      if (Math.abs(dx) + Math.abs(dy) > 0.5) state.angle = Math.atan2(dy, dx) * 180 / Math.PI + 45;
+      cursor.style.opacity = "1";
+      ring.style.opacity = "1";
+    });
+
+    window.addEventListener("pointerleave", () => {
+      cursor.style.opacity = "0";
+      ring.style.opacity = "0";
+    });
+
+    function animate() {
+      state.rx += (state.x - state.rx) * 0.18;
+      state.ry += (state.y - state.ry) * 0.18;
+      cursor.style.transform = `translate(${state.x - 17}px, ${state.y - 17}px) rotate(${state.angle}deg)`;
+      ring.style.transform = `translate(${state.rx - 35}px, ${state.ry - 35}px)`;
+      requestAnimationFrame(animate);
+    }
+
+    animate();
+  </script>
+</body>
+</html>

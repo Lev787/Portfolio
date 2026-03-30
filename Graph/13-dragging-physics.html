@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>13 Dragging Physics</title>
+  <style>
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      min-height: 100vh;
+      overflow: hidden;
+      font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+      color: #f5f9ff;
+      background:
+        radial-gradient(circle at top left, rgba(255, 184, 86, 0.16), transparent 20%),
+        radial-gradient(circle at bottom right, rgba(102, 224, 255, 0.14), transparent 22%),
+        linear-gradient(135deg, #06101c, #112035 50%, #09111d);
+    }
+    .hud {
+      position: fixed;
+      inset: 20px auto auto 20px;
+      max-width: 430px;
+      padding: 20px 22px;
+      border-radius: 24px;
+      background: rgba(8, 14, 26, 0.68);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      backdrop-filter: blur(12px);
+      z-index: 20;
+    }
+    h1 {
+      margin: 0 0 8px;
+      font-size: clamp(2rem, 5vw, 3.8rem);
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+    }
+    p { margin: 0; color: #d1dbf2; line-height: 1.55; }
+    .mass {
+      position: fixed;
+      left: 0;
+      top: 0;
+      width: 170px;
+      padding: 18px;
+      border-radius: 24px;
+      background: linear-gradient(145deg, rgba(255, 255, 255, 0.92), rgba(226, 238, 255, 0.84));
+      color: #0e1b33;
+      box-shadow: 0 20px 42px rgba(0, 0, 0, 0.24);
+      user-select: none;
+      touch-action: none;
+      cursor: grab;
+    }
+    .mass strong { display: block; margin-bottom: 6px; }
+    .mass.dragging { cursor: grabbing; }
+  </style>
+</head>
+<body>
+  <div class="hud" id="hud">
+    <h1>Dragging Physics</h1>
+    <p>Grab any object and drag it around. The cards behave like heavy pieces: they chase the pointer with a small delay instead of sticking to it instantly.</p>
+  </div>
+
+  <script>
+    const hud = document.getElementById("hud");
+    const cards = [
+      { title: "Heavy Card", text: "Slow follow motion", x: 140, y: 220, stiffness: 0.010, damping: 0.9, dragResponse: 0.12 },
+      { title: "Mass Block", text: "Inertia on drag", x: 380, y: 420, stiffness: 0.009, damping: 0.91, dragResponse: 0.1 },
+      { title: "Physics Tile", text: "Weighted movement", x: 680, y: 250, stiffness: 0.011, damping: 0.89, dragResponse: 0.13 },
+      { title: "Lag Panel", text: "Delayed translation", x: 920, y: 470, stiffness: 0.008, damping: 0.92, dragResponse: 0.09 }
+    ];
+    const bodies = [];
+    let active = null;
+    let z = 1;
+
+    for (const card of cards) {
+      const element = document.createElement("article");
+      element.className = "mass";
+      element.innerHTML = `<strong>${card.title}</strong><div>${card.text}</div>`;
+      document.body.appendChild(element);
+      const body = {
+        element,
+        x: card.x,
+        y: card.y,
+        tx: card.x,
+        ty: card.y,
+        px: card.x,
+        py: card.y,
+        vx: 0,
+        vy: 0,
+        angle: 0,
+        targetAngle: 0,
+        stiffness: card.stiffness,
+        damping: card.damping,
+        dragResponse: card.dragResponse,
+        width: element.offsetWidth,
+        height: element.offsetHeight
+      };
+      bodies.push(body);
+
+      element.addEventListener("pointerdown", (event) => {
+        active = body;
+        active.offsetX = event.clientX - active.tx;
+        active.offsetY = event.clientY - active.ty;
+        active.px = active.tx;
+        active.py = active.ty;
+        element.classList.add("dragging");
+        element.style.zIndex = String(++z);
+        element.setPointerCapture(event.pointerId);
+      });
+
+      element.addEventListener("pointermove", (event) => {
+        if (active !== body) return;
+        active.px = event.clientX - active.offsetX;
+        active.py = event.clientY - active.offsetY;
+      });
+
+      function release(event) {
+        if (active !== body) return;
+        body.tx = body.px;
+        body.ty = body.py;
+        active = null;
+        element.classList.remove("dragging");
+        if (event.pointerId != null && element.hasPointerCapture(event.pointerId)) {
+          element.releasePointerCapture(event.pointerId);
+        }
+      }
+
+      element.addEventListener("pointerup", release);
+      element.addEventListener("pointercancel", release);
+    }
+
+    function layoutBodies(forceSnap = false) {
+      const padding = 34;
+      const gapX = 36;
+      const gapY = 28;
+      const columns = window.innerWidth < 860 ? 1 : 2;
+      const rows = Math.ceil(bodies.length / columns);
+      const hudRect = hud.getBoundingClientRect();
+      const cardWidth = Math.max(...bodies.map((body) => {
+        body.width = body.element.offsetWidth;
+        return body.width;
+      }));
+      const cardHeight = Math.max(...bodies.map((body) => {
+        body.height = body.element.offsetHeight;
+        return body.height;
+      }));
+
+      const totalWidth = columns * cardWidth + (columns - 1) * gapX;
+      const totalHeight = rows * cardHeight + (rows - 1) * gapY;
+      const centeredX = (window.innerWidth - totalWidth) / 2;
+      const centeredY = (window.innerHeight - totalHeight) / 2;
+      const maxX = Math.max(padding, window.innerWidth - totalWidth - padding);
+      const minY = hudRect.bottom + 30;
+      const maxY = window.innerHeight - totalHeight - padding;
+
+      const startX = Math.min(Math.max(centeredX, padding), maxX);
+      let startY = centeredY;
+      if (maxY >= minY) {
+        startY = Math.min(Math.max(centeredY, minY), maxY);
+      } else {
+        startY = Math.max(padding, maxY);
+      }
+
+      bodies.forEach((body, index) => {
+        const col = index % columns;
+        const row = Math.floor(index / columns);
+        const targetX = startX + col * (cardWidth + gapX);
+        const targetY = startY + row * (cardHeight + gapY);
+
+        body.tx = targetX;
+        body.ty = targetY;
+        body.px = targetX;
+        body.py = targetY;
+
+        if (forceSnap) {
+          body.x = targetX;
+          body.y = targetY;
+          body.vx = 0;
+          body.vy = 0;
+          body.angle = 0;
+          body.targetAngle = 0;
+        }
+      });
+    }
+
+    function animate() {
+      for (const body of bodies) {
+        if (active === body) {
+          body.tx += (body.px - body.tx) * body.dragResponse;
+          body.ty += (body.py - body.ty) * body.dragResponse;
+        }
+
+        const ax = (body.tx - body.x) * body.stiffness;
+        const ay = (body.ty - body.y) * body.stiffness;
+        body.vx = (body.vx + ax) * body.damping;
+        body.vy = (body.vy + ay) * body.damping;
+        body.x += body.vx;
+        body.y += body.vy;
+
+        body.targetAngle = Math.max(-20, Math.min(20, body.vx * 1.7));
+        body.angle += (body.targetAngle - body.angle) * 0.16;
+
+        const stretch = Math.min(0.08, (Math.abs(body.vx) + Math.abs(body.vy)) * 0.0022);
+        const scaleX = 1 + stretch;
+        const scaleY = 1 - stretch * 0.55;
+        body.element.style.transform = `translate(${body.x}px, ${body.y}px) rotate(${body.angle}deg) scale(${scaleX}, ${scaleY})`;
+      }
+      requestAnimationFrame(animate);
+    }
+
+    window.addEventListener("resize", () => {
+      if (active) return;
+      layoutBodies(true);
+    });
+
+    layoutBodies(true);
+    animate();
+  </script>
+</body>
+</html>

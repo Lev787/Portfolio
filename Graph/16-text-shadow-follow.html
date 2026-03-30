@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>16 Text Shadow Follow</title>
+  <style>
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      min-height: 100vh;
+      padding: 48px 24px 80px;
+      font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+      color: #f7fbff;
+      background:
+        radial-gradient(circle at top, rgba(255, 214, 132, 0.16), transparent 24%),
+        radial-gradient(circle at bottom right, rgba(79, 214, 255, 0.14), transparent 24%),
+        linear-gradient(135deg, #060b15, #121b30 50%, #09111d);
+    }
+    .wrap { max-width: 980px; margin: 0 auto; }
+    .lead {
+      margin: 0 0 28px;
+      color: #d5def5;
+      line-height: 1.6;
+      max-width: 720px;
+    }
+    h1, h2 {
+      margin: 0 0 18px;
+      display: inline-block;
+      line-height: 1;
+      will-change: text-shadow;
+    }
+    h1 {
+      font-size: clamp(3rem, 8vw, 6rem);
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+    }
+    h2 {
+      font-size: clamp(2rem, 5vw, 4rem);
+      color: #eef5ff;
+    }
+    .section {
+      margin-top: 60px;
+      padding: 24px;
+      border-radius: 28px;
+      background: rgba(8, 14, 26, 0.52);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      backdrop-filter: blur(12px);
+    }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <h1>Shadow Follows Light</h1>
+    <p class="lead">Move the cursor around the page. Every heading casts its shadow in the opposite direction, as if the pointer were the sun and the text were physical objects.</p>
+
+    <section class="section">
+      <h2>Pointer As Sunlight</h2>
+      <p class="lead">The shadow vector is recalculated for every heading based on the cursor position relative to that element's center.</p>
+    </section>
+
+    <section class="section">
+      <h2>Opposite Direction Rule</h2>
+      <p class="lead">If the mouse moves right, shadows shift left. If the mouse moves down, shadows drift upward.</p>
+    </section>
+
+    <section class="section">
+      <h2>Layered Depth</h2>
+      <p class="lead">Each heading uses multiple soft shadow layers to make the motion feel more graphic and tangible.</p>
+    </section>
+  </div>
+
+  <script>
+    const headings = [...document.querySelectorAll("h1, h2")].map((element) => ({
+      element,
+      cx: 0,
+      cy: 0
+    }));
+    let pointerClientX = window.innerWidth / 2;
+    let pointerClientY = window.innerHeight / 2;
+    let renderFrame = 0;
+
+    function clamp(value, min, max) {
+      return Math.max(min, Math.min(max, value));
+    }
+
+    function measureHeadings() {
+      const scrollX = window.scrollX;
+      const scrollY = window.scrollY;
+      for (const heading of headings) {
+        const rect = heading.element.getBoundingClientRect();
+        heading.cx = rect.left + scrollX + rect.width / 2;
+        heading.cy = rect.top + scrollY + rect.height / 2;
+      }
+    }
+
+    function updateShadows() {
+      renderFrame = 0;
+      const x = pointerClientX + window.scrollX;
+      const y = pointerClientY + window.scrollY;
+
+      for (const heading of headings) {
+        const dx = clamp((heading.cx - x) / 16, -28, 28);
+        const dy = clamp((heading.cy - y) / 16, -28, 28);
+        heading.element.style.textShadow = `
+          ${dx}px ${dy}px 0 rgba(255, 170, 94, 0.35),
+          ${dx * 2.4}px ${dy * 2.4}px 36px rgba(0, 0, 0, 0.35)
+        `;
+      }
+    }
+
+    function scheduleShadowUpdate() {
+      if (renderFrame) return;
+      renderFrame = requestAnimationFrame(updateShadows);
+    }
+
+    window.addEventListener("pointermove", (event) => {
+      pointerClientX = event.clientX;
+      pointerClientY = event.clientY;
+      scheduleShadowUpdate();
+    }, { passive: true });
+
+    window.addEventListener("scroll", scheduleShadowUpdate, { passive: true });
+    window.addEventListener("resize", () => {
+      measureHeadings();
+      scheduleShadowUpdate();
+    });
+
+    measureHeadings();
+    scheduleShadowUpdate();
+  </script>
+</body>
+</html>

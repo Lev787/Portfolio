@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>11 Sticker Slap</title>
+  <style>
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      min-height: 100vh;
+      overflow: hidden;
+      font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+      color: #f4f8ff;
+      background:
+        linear-gradient(120deg, rgba(255, 255, 255, 0.08), transparent 36%),
+        radial-gradient(circle at top left, rgba(255, 214, 119, 0.16), transparent 20%),
+        radial-gradient(circle at bottom right, rgba(91, 223, 255, 0.16), transparent 24%),
+        linear-gradient(135deg, #08111d, #121f35 52%, #09111d);
+      cursor: pointer;
+    }
+    .hud {
+      position: fixed;
+      top: 20px;
+      left: 20px;
+      z-index: 20;
+      max-width: 430px;
+      padding: 20px 22px;
+      border-radius: 24px;
+      background: rgba(8, 14, 26, 0.68);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      backdrop-filter: blur(12px);
+    }
+    h1 {
+      margin: 0 0 8px;
+      font-size: clamp(2rem, 5vw, 3.6rem);
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+    }
+    p { margin: 0 0 12px; color: #ced8f0; line-height: 1.55; }
+    button {
+      padding: 12px 18px;
+      border: none;
+      border-radius: 999px;
+      font: inherit;
+      font-weight: 700;
+      color: #07111d;
+      background: linear-gradient(135deg, #9cf6ff, #fff08a);
+      cursor: pointer;
+    }
+    .sticker {
+      position: fixed;
+      width: 92px;
+      aspect-ratio: 1;
+      pointer-events: none;
+      background-size: contain;
+      background-repeat: no-repeat;
+      background-position: center;
+      filter: drop-shadow(0 16px 18px rgba(0, 0, 0, 0.2));
+      transform: translate(-50%, -50%) rotate(var(--rot)) scale(0.4);
+      animation: stamp 260ms cubic-bezier(.2,.92,.26,1) forwards;
+    }
+    @keyframes stamp {
+      to { transform: translate(-50%, -50%) rotate(var(--rot)) scale(1); }
+    }
+  </style>
+</head>
+<body>
+  <div class="hud">
+    <h1>Sticker Slap</h1>
+    <p>Click anywhere on the page to place a random hand-drawn sticker with a random rotation angle.</p>
+    <button type="button" id="clear">Clear Stickers</button>
+  </div>
+
+  <script>
+    const clearButton = document.getElementById("clear");
+    const stickers = [
+      "<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 120 120'><path d='M60 8l15 31 35 5-25 24 6 34-31-16-31 16 6-34L10 44l35-5 15-31z' fill='#ffd54f' stroke='#131c32' stroke-width='6'/></svg>",
+      "<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 120 120'><path d='M22 24h76v46H64l-22 22v-22H22z' fill='#7ee7ff' stroke='#131c32' stroke-width='6'/><circle cx='48' cy='46' r='5' fill='#131c32'/><circle cx='60' cy='46' r='5' fill='#131c32'/><circle cx='72' cy='46' r='5' fill='#131c32'/></svg>",
+      "<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 120 120'><path d='M64 8L20 68h28l-8 44 48-64H62z' fill='#ff7a59' stroke='#131c32' stroke-width='6' stroke-linejoin='round'/></svg>",
+      "<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 120 120'><circle cx='60' cy='60' r='34' fill='#98ffb6' stroke='#131c32' stroke-width='6'/><circle cx='48' cy='52' r='5' fill='#131c32'/><circle cx='72' cy='52' r='5' fill='#131c32'/><path d='M44 72c8 8 24 8 32 0' stroke='#131c32' stroke-width='6' fill='none' stroke-linecap='round'/></svg>",
+      "<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 120 120'><circle cx='60' cy='34' r='18' fill='#ff71aa'/><circle cx='36' cy='54' r='18' fill='#ff71aa'/><circle cx='84' cy='54' r='18' fill='#ff71aa'/><circle cx='48' cy='82' r='18' fill='#ff71aa'/><circle cx='72' cy='82' r='18' fill='#ff71aa'/><circle cx='60' cy='60' r='15' fill='#ffe58a'/><circle cx='60' cy='60' r='42' fill='none' stroke='#131c32' stroke-width='6'/></svg>"
+    ];
+
+    function addSticker(x, y) {
+      const sticker = document.createElement("div");
+      sticker.className = "sticker";
+      sticker.style.left = `${x}px`;
+      sticker.style.top = `${y}px`;
+      sticker.style.width = `${70 + Math.random() * 54}px`;
+      sticker.style.setProperty("--rot", `${(Math.random() - 0.5) * 70}deg`);
+      const art = stickers[Math.floor(Math.random() * stickers.length)];
+      sticker.style.backgroundImage = `url("data:image/svg+xml;utf8,${encodeURIComponent(art)}")`;
+      document.body.appendChild(sticker);
+    }
+
+    window.addEventListener("pointerdown", (event) => {
+      if (event.target === clearButton) return;
+      addSticker(event.clientX, event.clientY);
+    });
+
+    clearButton.addEventListener("click", () => {
+      for (const sticker of document.querySelectorAll(".sticker")) sticker.remove();
+    });
+  </script>
+</body>
+</html>

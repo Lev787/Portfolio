@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>14 Auto-Chaos Rotation</title>
+  <style>
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      min-height: 100vh;
+      overflow: hidden;
+      font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+      color: #f6f8ff;
+      background:
+        radial-gradient(circle at top, rgba(131, 233, 255, 0.16), transparent 22%),
+        radial-gradient(circle at bottom right, rgba(255, 147, 181, 0.16), transparent 22%),
+        linear-gradient(135deg, #050812, #121a2d 50%, #09111d);
+    }
+    .hud {
+      position: fixed;
+      inset: 20px auto auto 20px;
+      max-width: 460px;
+      padding: 20px 22px;
+      border-radius: 24px;
+      background: rgba(8, 14, 26, 0.68);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      backdrop-filter: blur(12px);
+      z-index: 30;
+    }
+    h1 {
+      margin: 0 0 8px;
+      font-size: clamp(2rem, 5vw, 3.8rem);
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+    }
+    p { margin: 0; color: #d4ddf2; line-height: 1.55; }
+    .floaty {
+      position: fixed;
+      left: 0;
+      top: 0;
+      width: 220px;
+      padding: 18px 22px;
+      border-radius: 24px;
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      box-shadow: 0 20px 44px rgba(0, 0, 0, 0.24);
+      backdrop-filter: blur(10px);
+      color: #08111d;
+      user-select: none;
+      transform-origin: center;
+    }
+    .floaty strong { display: block; margin-bottom: 6px; }
+  </style>
+</head>
+<body>
+  <div class="hud" id="hud">
+    <h1>Auto-Chaos Rotation</h1>
+    <p>Every floating panel slowly rotates around its own center at a different speed. Small drifting offsets keep the interface alive and slightly unpredictable.</p>
+  </div>
+
+  <script>
+    const hud = document.getElementById("hud");
+    const items = [
+      { title: "Orbit", text: "Slow clockwise turn", color: "rgba(255, 223, 128, 0.92)" },
+      { title: "Drift", text: "Counter rotation", color: "rgba(128, 238, 255, 0.92)" },
+      { title: "Pulse", text: "Offset wobble", color: "rgba(255, 154, 193, 0.92)" },
+      { title: "Bloom", text: "Independent speed", color: "rgba(151, 255, 190, 0.92)" },
+      { title: "Tide", text: "Floating UI tile", color: "rgba(180, 194, 255, 0.92)" },
+      { title: "Wave", text: "Soft rotation loop", color: "rgba(255, 200, 148, 0.92)" }
+    ];
+
+    const bodies = items.map((item) => {
+      const element = document.createElement("article");
+      element.className = "floaty";
+      element.style.background = item.color;
+      element.innerHTML = `<strong>${item.title}</strong><div>${item.text}</div>`;
+      document.body.appendChild(element);
+      return {
+        element,
+        x: 0,
+        y: 0,
+        width: element.offsetWidth,
+        height: element.offsetHeight,
+        driftSpeedX: (Math.random() * 0.75 + 0.35) * (Math.random() > 0.5 ? 1 : -1),
+        driftSpeedY: (Math.random() * 0.65 + 0.3) * (Math.random() > 0.5 ? 1 : -1),
+        rotateSpeed: (Math.random() * 0.8 + 0.2) * (Math.random() > 0.5 ? 1 : -1),
+        baseAngle: Math.random() * 360,
+        ampX: 14 + Math.random() * 24,
+        ampY: 10 + Math.random() * 18,
+        phaseX: Math.random() * Math.PI * 2,
+        phaseY: Math.random() * Math.PI * 2
+      };
+    });
+
+    function layoutBodies() {
+      const padding = 34;
+      const gapX = 34;
+      const gapY = 28;
+      const hudRect = hud.getBoundingClientRect();
+      const safeTop = hudRect.bottom + 36;
+      const cardWidth = Math.max(...bodies.map((body) => {
+        body.width = body.element.offsetWidth;
+        return body.width;
+      }));
+      const cardHeight = Math.max(...bodies.map((body) => {
+        body.height = body.element.offsetHeight;
+        return body.height;
+      }));
+
+      let columns = 3;
+      while (columns > 1) {
+        const totalWidth = columns * cardWidth + (columns - 1) * gapX;
+        if (totalWidth <= window.innerWidth - padding * 2) break;
+        columns -= 1;
+      }
+
+      const rows = Math.ceil(bodies.length / columns);
+      const totalWidth = columns * cardWidth + (columns - 1) * gapX;
+      const totalHeight = rows * cardHeight + (rows - 1) * gapY;
+      const availableHeight = Math.max(0, window.innerHeight - safeTop - padding);
+      const startX = Math.max(padding, (window.innerWidth - totalWidth) / 2);
+      const startY = safeTop + Math.max(0, (availableHeight - totalHeight) / 2);
+
+      bodies.forEach((body, index) => {
+        const col = index % columns;
+        const row = Math.floor(index / columns);
+        body.x = startX + col * (cardWidth + gapX);
+        body.y = startY + row * (cardHeight + gapY);
+      });
+    }
+
+    function animate(time) {
+      const t = time * 0.001;
+      for (const body of bodies) {
+        const dx = Math.sin(t * body.driftSpeedX + body.phaseX) * body.ampX;
+        const dy = Math.cos(t * body.driftSpeedY + body.phaseY) * body.ampY;
+        const angle = body.baseAngle + t * 18 * body.rotateSpeed;
+        body.element.style.transform = `translate(${body.x + dx}px, ${body.y + dy}px) rotate(${angle}deg)`;
+      }
+      requestAnimationFrame(animate);
+    }
+
+    window.addEventListener("resize", layoutBodies);
+    layoutBodies();
+    requestAnimationFrame(animate);
+  </script>
+</body>
+</html>

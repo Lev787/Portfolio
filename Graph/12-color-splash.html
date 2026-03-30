@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>12 Color Splash</title>
+  <style>
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      min-height: 100vh;
+      overflow: hidden;
+      font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+      color: #f6f9ff;
+      background:
+        radial-gradient(circle at top, rgba(255, 188, 110, 0.18), transparent 25%),
+        radial-gradient(circle at bottom left, rgba(88, 215, 255, 0.18), transparent 25%),
+        linear-gradient(135deg, #060a14, #111b30 50%, #09111c);
+    }
+    .hud {
+      position: fixed;
+      inset: 20px auto auto 20px;
+      max-width: 420px;
+      padding: 20px 22px;
+      border-radius: 24px;
+      background: rgba(8, 14, 26, 0.68);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      backdrop-filter: blur(12px);
+      z-index: 20;
+    }
+    h1 {
+      margin: 0 0 8px;
+      font-size: clamp(2rem, 5vw, 3.7rem);
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+    }
+    p { margin: 0; color: #d1dcff; line-height: 1.55; }
+    .blob {
+      position: fixed;
+      left: 0;
+      top: 0;
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      pointer-events: none;
+      transform: translate(-50%, -50%);
+      background:
+        radial-gradient(circle at 35% 35%, rgba(255, 255, 255, 0.9), rgba(255, 255, 255, 0.08) 18%, transparent 22%),
+        radial-gradient(circle at center, hsl(var(--hue) 95% 68% / 0.78), hsl(var(--hue) 95% 58% / 0.22) 58%, transparent 72%);
+      filter: blur(2px);
+      box-shadow: 0 0 40px hsl(var(--hue) 95% 62% / 0.24);
+      mix-blend-mode: screen;
+      will-change: width, height, transform, opacity;
+    }
+    .blob.release {
+      animation: burst 500ms ease-out forwards;
+    }
+    @keyframes burst {
+      to {
+        transform: translate(-50%, -50%) scale(1.45);
+        opacity: 0;
+        filter: blur(10px);
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="hud">
+    <h1>Color Splash</h1>
+    <p>Press and hold anywhere on the screen. A glowing color splash grows under the cursor until the button is released, then it blooms and fades away.</p>
+  </div>
+
+  <script>
+    let activeSplash = null;
+
+    function createSplash(x, y) {
+      const blob = document.createElement("div");
+      blob.className = "blob";
+      blob.style.left = `${x}px`;
+      blob.style.top = `${y}px`;
+      blob.style.setProperty("--hue", String(Math.random() * 360));
+      document.body.appendChild(blob);
+      activeSplash = { element: blob, x, y, start: performance.now(), released: false };
+    }
+
+    function releaseSplash() {
+      if (!activeSplash || activeSplash.released) return;
+      const { element } = activeSplash;
+      activeSplash.released = true;
+      element.classList.add("release");
+      element.addEventListener("animationend", () => element.remove(), { once: true });
+      activeSplash = null;
+    }
+
+    function animate() {
+      if (activeSplash) {
+        const elapsed = performance.now() - activeSplash.start;
+        const size = Math.min(44 + elapsed * 0.28, 280);
+        activeSplash.element.style.width = `${size}px`;
+        activeSplash.element.style.height = `${size}px`;
+        activeSplash.element.style.left = `${activeSplash.x}px`;
+        activeSplash.element.style.top = `${activeSplash.y}px`;
+      }
+      requestAnimationFrame(animate);
+    }
+
+    window.addEventListener("pointerdown", (event) => createSplash(event.clientX, event.clientY));
+    window.addEventListener("pointermove", (event) => {
+      if (!activeSplash) return;
+      activeSplash.x = event.clientX;
+      activeSplash.y = event.clientY;
+    });
+    window.addEventListener("pointerup", releaseSplash);
+    window.addEventListener("pointercancel", releaseSplash);
+    animate();
+  </script>
+</body>
+</html>

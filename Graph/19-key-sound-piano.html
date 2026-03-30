@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>19 Key-Sound Piano</title>
+  <style>
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      min-height: 100vh;
+      display: grid;
+      place-items: center;
+      padding: 24px;
+      font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+      color: #f6fbff;
+      background:
+        radial-gradient(circle at top left, rgba(255, 228, 135, 0.16), transparent 20%),
+        radial-gradient(circle at bottom right, rgba(88, 218, 255, 0.16), transparent 24%),
+        linear-gradient(135deg, #060a14, #121b30 50%, #09111d);
+    }
+    .panel {
+      width: min(860px, 96vw);
+      padding: 28px;
+      border-radius: 28px;
+      background: rgba(8, 14, 26, 0.7);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      backdrop-filter: blur(14px);
+      box-shadow: 0 24px 50px rgba(0, 0, 0, 0.24);
+    }
+    h1 {
+      margin: 0 0 8px;
+      font-size: clamp(2rem, 5vw, 4rem);
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+    }
+    p { margin: 0 0 18px; color: #d3ddf6; line-height: 1.6; }
+    textarea {
+      width: 100%;
+      min-height: 190px;
+      resize: vertical;
+      padding: 18px;
+      border-radius: 22px;
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      background: rgba(255, 255, 255, 0.05);
+      color: #f6fbff;
+      font: inherit;
+      outline: none;
+    }
+    .footer {
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+      flex-wrap: wrap;
+      margin-top: 16px;
+      color: #9eb2d8;
+    }
+    .bars {
+      display: flex;
+      align-items: end;
+      gap: 6px;
+      height: 42px;
+    }
+    .bar {
+      width: 10px;
+      border-radius: 999px 999px 0 0;
+      background: linear-gradient(180deg, #9cf6ff, #ffe082);
+      height: 8px;
+      transition: height 120ms ease;
+    }
+  </style>
+</head>
+<body>
+  <section class="panel">
+    <h1>Key-Sound Piano</h1>
+    <p>Type inside the text area. Every key press triggers a short random synth sound, ranging from soft beeps to more cartoon-like chirps.</p>
+    <textarea id="pad" placeholder="Type here and listen..."></textarea>
+    <div class="footer">
+      <span id="last">Last sound: none</span>
+      <div class="bars" id="bars"></div>
+    </div>
+  </section>
+
+  <script>
+    const pad = document.getElementById("pad");
+    const last = document.getElementById("last");
+    const bars = document.getElementById("bars");
+    let audioContext;
+
+    for (let i = 0; i < 8; i += 1) {
+      const bar = document.createElement("div");
+      bar.className = "bar";
+      bars.appendChild(bar);
+    }
+
+    function flashBars() {
+      for (const bar of bars.children) {
+        const height = 10 + Math.random() * 30;
+        bar.style.height = `${height}px`;
+      }
+    }
+
+    function playKeySound(key) {
+      audioContext = audioContext || new (window.AudioContext || window.webkitAudioContext)();
+      const now = audioContext.currentTime;
+      const code = key.length ? key.charCodeAt(0) : 0;
+      const frequency = 180 + (code % 24) * 18 + Math.random() * 20;
+      const waveforms = ["sine", "triangle", "square", "sawtooth"];
+      const waveform = waveforms[Math.floor(Math.random() * waveforms.length)];
+
+      const gain = audioContext.createGain();
+      gain.gain.setValueAtTime(0.0001, now);
+      gain.gain.exponentialRampToValueAtTime(0.12, now + 0.01);
+      gain.gain.exponentialRampToValueAtTime(0.0001, now + 0.18);
+      gain.connect(audioContext.destination);
+
+      const osc = audioContext.createOscillator();
+      osc.type = waveform;
+      osc.frequency.setValueAtTime(frequency, now);
+      osc.frequency.exponentialRampToValueAtTime(frequency * (1.15 + Math.random() * 0.3), now + 0.08);
+      osc.connect(gain);
+      osc.start(now);
+      osc.stop(now + 0.18);
+
+      last.textContent = `Last sound: ${waveform} ${Math.round(frequency)}Hz`;
+      flashBars();
+    }
+
+    pad.addEventListener("keydown", async (event) => {
+      if (event.ctrlKey || event.metaKey || event.altKey) return;
+      if (audioContext && audioContext.state === "suspended") await audioContext.resume();
+      playKeySound(event.key);
+    });
+  </script>
+</body>
+</html>

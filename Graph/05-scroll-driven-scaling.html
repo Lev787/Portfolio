@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>05 Scroll-Driven Scaling</title>
+  <style>
+    :root { --progress: 0; }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      min-height: 320vh;
+      font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+      background: linear-gradient(180deg, #09101d, #0b1528 28%, #111e33 60%, #051019);
+      color: #f5f9ff;
+    }
+    .sticky {
+      position: sticky;
+      top: 0;
+      height: 100vh;
+      display: grid;
+      place-items: center;
+      overflow: hidden;
+    }
+    .stage {
+      position: relative;
+      width: min(900px, 88vw);
+      aspect-ratio: 1.3;
+    }
+    .orb, .panel {
+      position: absolute;
+      border-radius: 28px;
+      box-shadow: 0 24px 60px rgba(0, 0, 0, 0.28);
+      will-change: transform;
+    }
+    .orb {
+      inset: 12% auto auto 14%;
+      width: 240px;
+      height: 240px;
+      border-radius: 50%;
+      background: radial-gradient(circle at 35% 30%, #fff3bf, #ffa53f 38%, #ff5c80 78%);
+      transform: scale(calc(0.8 + var(--progress) * 0.9));
+    }
+    .panel.one {
+      inset: auto auto 18% 12%;
+      width: 240px;
+      height: 160px;
+      background: linear-gradient(135deg, #74ecff, #607cff);
+      transform: scale(calc(0.75 + var(--progress) * 0.55)) rotate(calc(var(--progress) * 12deg));
+    }
+    .panel.two {
+      inset: 18% 8% auto auto;
+      width: 280px;
+      height: 190px;
+      background: linear-gradient(135deg, #7bffb2, #1dc0ad);
+      transform: scale(calc(1.2 - var(--progress) * 0.45)) rotate(calc(-6deg - var(--progress) * 10deg));
+    }
+    .panel.three {
+      inset: auto 10% 10% auto;
+      width: 220px;
+      height: 220px;
+      border-radius: 34px;
+      background: linear-gradient(135deg, #ffe58c, #ff7a59);
+      transform: scale(calc(0.85 + var(--progress) * 0.8)) rotate(calc(8deg + var(--progress) * 16deg));
+    }
+    .copy {
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      width: min(620px, 70vw);
+      transform: translate(-50%, -50%) scale(calc(0.95 + var(--progress) * 0.4));
+      padding: 28px;
+      border-radius: 28px;
+      background: rgba(9, 14, 24, 0.54);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      backdrop-filter: blur(14px);
+      text-align: center;
+    }
+    h1 {
+      margin: 0 0 10px;
+      font-size: clamp(2rem, 5vw, 4.2rem);
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+    }
+    p { margin: 0; line-height: 1.6; color: #d6dff6; }
+    .progress {
+      margin-top: 14px;
+      color: #8ee6ff;
+      font-weight: 700;
+      letter-spacing: 0.06em;
+    }
+    .guide {
+      position: absolute;
+      inset: auto 24px 24px auto;
+      color: #a6b4d7;
+      font-size: 0.95rem;
+    }
+  </style>
+</head>
+<body>
+  <section class="sticky">
+    <div class="stage">
+      <div class="orb"></div>
+      <div class="panel one"></div>
+      <div class="panel two"></div>
+      <div class="panel three"></div>
+      <div class="copy">
+        <h1>Scroll to Scale</h1>
+        <p>As you move further down the page, every major design element grows or shrinks according to the scroll progress.</p>
+        <div class="progress" id="progress">Progress: 0%</div>
+      </div>
+    </div>
+    <div class="guide">Keep scrolling to the bottom.</div>
+  </section>
+  <script>
+    const root = document.documentElement;
+    const progressLabel = document.getElementById("progress");
+
+    function updateProgress() {
+      const max = document.documentElement.scrollHeight - window.innerHeight;
+      const progress = max > 0 ? window.scrollY / max : 0;
+      root.style.setProperty("--progress", progress.toFixed(4));
+      progressLabel.textContent = `Progress: ${Math.round(progress * 100)}%`;
+    }
+
+    window.addEventListener("scroll", updateProgress, { passive: true });
+    window.addEventListener("resize", updateProgress);
+    updateProgress();
+  </script>
+</body>
+</html>

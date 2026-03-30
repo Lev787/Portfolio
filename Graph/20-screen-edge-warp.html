@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>20 Screen Edge Warp</title>
+  <style>
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      min-height: 100vh;
+      overflow: hidden;
+      font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+      color: #f6fbff;
+      background:
+        radial-gradient(circle at top left, rgba(255, 220, 131, 0.16), transparent 20%),
+        radial-gradient(circle at bottom right, rgba(88, 216, 255, 0.16), transparent 24%),
+        linear-gradient(135deg, #060a14, #121b30 50%, #09111d);
+    }
+    .hud {
+      position: fixed;
+      inset: 20px auto auto 20px;
+      z-index: 20;
+      max-width: 450px;
+      padding: 20px 22px;
+      border-radius: 24px;
+      background: rgba(8, 14, 26, 0.72);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      backdrop-filter: blur(12px);
+    }
+    h1 {
+      margin: 0 0 8px;
+      font-size: clamp(2rem, 5vw, 3.7rem);
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+    }
+    p { margin: 0; color: #d5def5; line-height: 1.55; }
+    .warp {
+      position: fixed;
+      left: 0;
+      top: 0;
+      width: 150px;
+      padding: 18px;
+      border-radius: 24px;
+      background: rgba(255, 255, 255, 0.92);
+      color: #0d1830;
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.24);
+      user-select: none;
+      touch-action: none;
+      cursor: grab;
+    }
+    .warp:active { cursor: grabbing; }
+    .warp strong { display: block; margin-bottom: 6px; }
+  </style>
+</head>
+<body>
+  <div class="hud" id="hud">
+    <h1>Screen Edge Warp</h1>
+    <p>Drag any object beyond the screen border. Instead of disappearing, it reappears on the opposite side with a Pac-Man style wraparound effect.</p>
+  </div>
+
+  <script>
+    const hud = document.getElementById("hud");
+    const items = [
+      { title: "Warp A", text: "Try the left edge", dx: -190, dy: 10, bg: "rgba(255, 236, 176, 0.94)" },
+      { title: "Warp B", text: "Vertical wrap too", dx: 0, dy: 88, bg: "rgba(156, 244, 255, 0.94)" },
+      { title: "Warp C", text: "Pac-Man logic", dx: 190, dy: -8, bg: "rgba(255, 187, 212, 0.94)" }
+    ];
+    let active = null;
+    let z = 1;
+    const bodies = [];
+
+    for (const item of items) {
+      const element = document.createElement("article");
+      element.className = "warp";
+      element.style.background = item.bg;
+      element.innerHTML = `<strong>${item.title}</strong><div>${item.text}</div>`;
+      document.body.appendChild(element);
+
+      const body = {
+        element,
+        x: 0,
+        y: 0,
+        dx: item.dx,
+        dy: item.dy,
+        width: element.offsetWidth,
+        height: element.offsetHeight,
+        offsetX: 0,
+        offsetY: 0
+      };
+      bodies.push(body);
+
+      function render() {
+        element.style.transform = `translate(${body.x}px, ${body.y}px)`;
+      }
+
+      element.addEventListener("pointerdown", (event) => {
+        active = body;
+        body.offsetX = event.clientX - body.x;
+        body.offsetY = event.clientY - body.y;
+        element.style.zIndex = String(++z);
+        element.setPointerCapture(event.pointerId);
+      });
+
+      element.addEventListener("pointermove", (event) => {
+        if (active !== body) return;
+        body.x = event.clientX - body.offsetX;
+        body.y = event.clientY - body.offsetY;
+
+        if (body.x < -body.width / 2) {
+          body.x = window.innerWidth - body.width / 2;
+          body.offsetX = event.clientX - body.x;
+        } else if (body.x > window.innerWidth - body.width / 2) {
+          body.x = -body.width / 2;
+          body.offsetX = event.clientX - body.x;
+        }
+
+        if (body.y < -body.height / 2) {
+          body.y = window.innerHeight - body.height / 2;
+          body.offsetY = event.clientY - body.y;
+        } else if (body.y > window.innerHeight - body.height / 2) {
+          body.y = -body.height / 2;
+          body.offsetY = event.clientY - body.y;
+        }
+
+        render();
+      });
+
+      function release(event) {
+        if (active !== body) return;
+        active = null;
+        if (event.pointerId != null && element.hasPointerCapture(event.pointerId)) {
+          element.releasePointerCapture(event.pointerId);
+        }
+      }
+
+      element.addEventListener("pointerup", release);
+      element.addEventListener("pointercancel", release);
+      render();
+    }
+
+    function layoutBodies() {
+      const hudRect = hud.getBoundingClientRect();
+      const padding = 28;
+      const safeTop = hudRect.bottom + 34;
+      const safeBottom = 28;
+
+      for (const body of bodies) {
+        body.width = body.element.offsetWidth;
+        body.height = body.element.offsetHeight;
+      }
+
+      const bodyWidth = Math.max(...bodies.map((body) => body.width));
+      const bodyHeight = Math.max(...bodies.map((body) => body.height));
+      const centerX = window.innerWidth / 2 - bodyWidth / 2;
+      const minY = safeTop;
+      const maxY = Math.max(minY, window.innerHeight - bodyHeight - safeBottom);
+      const centerY = Math.min(Math.max((window.innerHeight - bodyHeight) / 2, minY), maxY);
+
+      for (const body of bodies) {
+        body.x = Math.min(
+          Math.max(centerX + body.dx, padding),
+          window.innerWidth - body.width - padding
+        );
+        body.y = Math.min(
+          Math.max(centerY + body.dy, minY),
+          window.innerHeight - body.height - safeBottom
+        );
+        body.element.style.transform = `translate(${body.x}px, ${body.y}px)`;
+      }
+    }
+
+    window.addEventListener("resize", () => {
+      if (active) return;
+      layoutBodies();
+    });
+
+    layoutBodies();
+  </script>
+</body>
+</html>
