@@ -11,6 +11,7 @@
     <input type="color" id="color" title="Цвет" value="#000000">
     <label class="label">Кисть <input id="size" type="range" min="1" max="80" value="5"></label>
     <button id="eraser" title="Ластик">Ластик</button>
+    <button id="pipette" title="Пипетка">Пипетка</button>
     <button id="undo" title="Назад">Отменить</button>
     <button id="clear" title="Очистить">Очистить</button>
     <button id="save" title="Сохранить PNG">Скачать PNG</button>
@@ -18,7 +19,10 @@
     <button id="openGallery" title="Открыть галерею">Галерея</button>
   </div>
 
-  <canvas id="canvas"></canvas>
+  <div class="canvasWrap">
+    <canvas id="canvas"></canvas>
+    <canvas id="cursorCanvas" class="cursorCanvas hidden"></canvas>
+  </div>
 
   <div id="galleryPanel" class="hidden">
     <div class="galleryHeader">
@@ -30,6 +34,7 @@
     </div>
     <div id="galleryItems" class="galleryItems"></div>
   </div>
+  <div id="toast" class="toast hidden"></div>
 
   <script src="app.js"></script>
 </body>
