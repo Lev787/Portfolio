@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Pixel Puzzle</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <canvas id="fireworksCanvas" aria-hidden="true"></canvas>
+
+  <input id="uploadInput" type="file" accept="image/*" hidden>
+  <input id="cameraInput" type="file" accept="image/*" capture="environment" hidden>
+
+  <div class="app-shell">
+    <aside class="control-panel">
+      <div class="panel-card">
+        <label class="field-label" for="playerName">Player</label>
+        <input id="playerName" class="text-input" type="text" maxlength="24" placeholder="Player name">
+
+        <div class="button-column">
+          <button id="uploadButton" class="primary-button">Upload photo</button>
+          <button id="cameraButton" class="secondary-button">Camera</button>
+          <button id="cutButton" class="accent-button">Cut into puzzles</button>
+        </div>
+      </div>
+
+      <div class="panel-card">
+        <p class="field-label">Dynamic Slicer</p>
+        <div class="difficulty-row" aria-label="Difficulty selector">
+          <button class="difficulty-button" data-size="3">3x3</button>
+          <button class="difficulty-button active" data-size="4">4x4</button>
+          <button class="difficulty-button" data-size="5">5x5</button>
+          <button class="difficulty-button" data-size="10">10x10</button>
+        </div>
+
+        <div class="button-column compact">
+          <button id="ghostButton" class="secondary-button">Preview: Off</button>
+          <button id="magnetButton" class="secondary-button">Magnet: On</button>
+          <button id="shapeButton" class="secondary-button">Shape: Squares</button>
+          <button id="fireworksButton" class="secondary-button">Fireworks: On</button>
+        </div>
+
+        <label class="field-label" for="musicSelect">Background Music</label>
+        <select id="musicSelect" class="select-input">
+          <option value="arcade">Arcade Rush</option>
+          <option value="ambient">Neon Drift</option>
+          <option value="focus">Pulse Drive</option>
+          <option value="off">Off</option>
+        </select>
+
+        <div class="button-row">
+          <button id="musicButton" class="secondary-button">Music: Play</button>
+          <button id="refreshRecordsButton" class="secondary-button">Leaderboard</button>
+          <button id="exportRecordsButton" class="secondary-button">Export JSON</button>
+        </div>
+      </div>
+
+      <div class="panel-card leaderboard-card">
+        <div class="leaderboard-topline">
+          <span class="field-label">Current Record</span>
+          <strong id="bestTime" class="best-time">00:00.0</strong>
+        </div>
+        <p id="bestPlayer" class="best-player">No completed runs yet.</p>
+
+        <div class="stats-row">
+          <div class="stat-chip">
+            <span>Timer</span>
+            <strong id="timerDisplay">00:00.0</strong>
+          </div>
+          <div class="stat-chip">
+            <span>Mode</span>
+            <strong id="modeLabel">4x4 / Squares</strong>
+          </div>
+        </div>
+
+        <table class="records-table">
+          <thead>
+            <tr>
+              <th>#</th>
+              <th>Player</th>
+              <th>Time</th>
+              <th>Mode</th>
+            </tr>
+          </thead>
+          <tbody id="recordsBody">
+            <tr>
+              <td colspan="4" class="records-empty">Leaderboard is empty.</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </aside>
+
+    <main class="play-layout">
+      <section class="stage-top">
+        <section class="board-panel panel-card">
+          <div class="panel-heading">
+            <div>
+              <p class="mini-label">Puzzle Zone</p>
+              <h2>Assembly Field</h2>
+            </div>
+            <span id="boardMeta" class="panel-meta">Empty 4x4 board</span>
+          </div>
+
+          <div id="boardSurface" class="board-surface">
+            <div id="ghostLayer" class="ghost-layer"></div>
+            <div id="boardGrid" class="board-grid" aria-label="Assembly field"></div>
+          </div>
+        </section>
+
+        <section class="preview-panel panel-card">
+          <div class="panel-heading">
+            <div>
+              <p class="mini-label">Reference</p>
+              <h2>Original Image</h2>
+            </div>
+            <span id="imageLabel" class="panel-meta">Default artwork</span>
+          </div>
+
+          <div class="preview-frame">
+            <img id="sourcePreview" alt="Original image used to generate the puzzle">
+          </div>
+        </section>
+      </section>
+
+      <section class="storage-panel panel-card">
+        <div class="panel-heading">
+          <div>
+            <p class="mini-label">Bottom Storage</p>
+            <h2>Storage</h2>
+          </div>
+          <span id="storageMeta" class="panel-meta">Pieces will appear here after shuffling.</span>
+        </div>
+
+        <div id="storagePieces" class="storage-pieces" aria-label="Storage area"></div>
+      </section>
+    </main>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>
