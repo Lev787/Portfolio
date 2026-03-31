@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Digital Life Simulator</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <!--
+      All required features live on the same page:
+      the controls stay on the left and the canvas-based world runs on the right.
+    -->
+    <main class="app-shell">
+      <section class="hero">
+        <div class="hero-copy">
+          <p class="eyebrow">Digital Life Simulator</p>
+          <h1>Particle Sandbox</h1>
+          <p class="intro">
+            Scatter living particles, steer them with wind, let them blend into
+            new colors, and freeze time right when you want a screenshot.
+          </p>
+        </div>
+
+        <div class="status-pills">
+          <span class="status-pill" id="live-count">0 active</span>
+          <span class="status-pill" id="recycle-count">0 ready to respawn</span>
+          <span class="status-pill" id="mode-indicator">Brush: Sprinkle</span>
+        </div>
+      </section>
+
+      <section class="workspace">
+        <aside class="control-panel">
+          <section class="panel-group">
+            <div class="panel-heading">
+              <h2>Brush & Material</h2>
+              <p>Classic painting has been replaced with real particle sprinkling.</p>
+            </div>
+
+            <label class="control">
+              <span class="control-label">Brush mode</span>
+              <select id="brush-mode">
+                <option value="sprinkle">Sprinkle</option>
+                <option value="attract">Attract</option>
+                <option value="repel">Repel</option>
+              </select>
+            </label>
+
+            <label class="control">
+              <span class="control-label">Material</span>
+              <select id="material-type">
+                <option value="sand">Sand</option>
+                <option value="water">Water</option>
+                <option value="gas">Gas</option>
+              </select>
+            </label>
+
+            <label class="control">
+              <span class="control-label">Particle color</span>
+              <input id="particle-color" type="color" value="#f4a261" />
+            </label>
+
+            <label class="control">
+              <span class="control-label">Brush size</span>
+              <div class="range-row">
+                <input id="brush-size" type="range" min="14" max="120" value="44" />
+                <strong id="brush-size-value">44 px</strong>
+              </div>
+            </label>
+
+            <label class="control">
+              <span class="control-label">Particles per second</span>
+              <div class="range-row">
+                <input id="spawn-rate" type="range" min="40" max="360" value="180" />
+                <strong id="spawn-rate-value">180</strong>
+              </div>
+            </label>
+          </section>
+
+          <section class="panel-group">
+            <div class="panel-heading">
+              <h2>World Rules</h2>
+              <p>Control global forces and special modes here.</p>
+            </div>
+
+            <label class="control">
+              <span class="control-label">Global wind</span>
+              <div class="range-row">
+                <input id="wind-force" type="range" min="-280" max="280" value="0" />
+                <strong id="wind-force-value">0</strong>
+              </div>
+            </label>
+
+            <label class="control">
+              <span class="control-label">Self-organization word</span>
+              <input id="formation-text" type="text" maxlength="10" value="LIFE" />
+            </label>
+
+            <div class="button-grid">
+              <button id="organize-toggle" type="button">Align as word</button>
+              <button id="heatmap-toggle" type="button">Heat map</button>
+              <button id="freeze-toggle" type="button">Time freeze</button>
+              <button id="sound-toggle" type="button">Enable sound</button>
+              <button id="screenshot-button" type="button">Screenshot</button>
+              <button id="clear-button" type="button">Clear stage</button>
+            </div>
+          </section>
+
+        </aside>
+
+        <section class="stage-card">
+          <canvas id="sandbox" aria-label="Particle Sandbox simulation"></canvas>
+
+          <div class="canvas-overlay">
+            <p id="hint-text">
+              Drag to sprinkle particles. Click to bring expired particles back to life at the cursor.
+            </p>
+          </div>
+        </section>
+      </section>
+    </main>
+
+    <script src="script.js"></script>
+  </body>
+</html>
