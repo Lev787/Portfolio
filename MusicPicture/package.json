@@ -1,0 +1,18 @@
+{
+  "name": "music-picture",
+  "version": "1.0.0",
+  "description": "Photo to music web app built with JavaScript and Node.js",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node server.js"
+  },
+  "keywords": [
+    "music",
+    "image",
+    "audio",
+    "nodejs",
+    "javascript"
+  ],
+  "license": "MIT"
+}

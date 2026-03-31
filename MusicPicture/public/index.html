@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Chromatune Lab</title>
+    <link rel="stylesheet" href="./styles.css" />
+    <script defer src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@4.20.0/dist/tf.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/@tensorflow-models/coco-ssd"></script>
+    <script defer src="./app.js"></script>
+  </head>
+  <body>
+    <div class="orb orb-a"></div>
+    <div class="orb orb-b"></div>
+    <div class="grain"></div>
+
+    <main class="layout">
+      <div class="main-area">
+        <section class="hero panel">
+          <div class="eyebrow">JavaScript + Node.js + Web Audio</div>
+          <div class="hero-grid">
+            <div>
+              <h1>Chromatune Lab</h1>
+              <p class="hero-copy">
+                Upload a photo, let the app analyze its colors and objects, and hear
+                how they become a unique piece of music.
+              </p>
+              <div class="hero-actions">
+                <label class="button primary file-button">
+                  <input id="fileInput" type="file" accept="image/*" />
+                  Upload Photo
+                </label>
+                <button id="demoButton" class="button ghost" type="button">Demo Scene</button>
+                <button id="playButton" class="button secondary" type="button" disabled>Play</button>
+                <button id="exportButton" class="button ghost" type="button" disabled>Export WAV</button>
+              </div>
+            </div>
+
+            <div class="feature-cloud">
+              <div class="mini-card">
+                <span>Auto Mood</span>
+                <strong id="moodLabel">waiting...</strong>
+              </div>
+              <div class="mini-card">
+                <span>BPM</span>
+                <strong id="tempoLabel">--</strong>
+              </div>
+              <div class="mini-card">
+                <span>Objects</span>
+                <strong id="objectCountLabel">0</strong>
+              </div>
+              <div class="mini-card">
+                <span>Style</span>
+                <strong id="styleReadout">Aurora</strong>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section class="workspace">
+          <div class="left-column">
+            <section class="panel upload-panel">
+              <div id="dropZone" class="canvas-frame">
+                <canvas id="previewCanvas" width="720" height="480"></canvas>
+              </div>
+            </section>
+          </div>
+
+          <div class="right-column">
+            <section class="panel analysis-panel">
+              <div class="panel-heading">
+                <h2>Image DNA</h2>
+                <span id="sourceLabel">No image yet</span>
+              </div>
+
+              <div class="stat-grid">
+                <div class="stat-card">
+                  <span>Brightness</span>
+                  <strong id="brightnessStat">--</strong>
+                </div>
+                <div class="stat-card">
+                  <span>Contrast</span>
+                  <strong id="contrastStat">--</strong>
+                </div>
+                <div class="stat-card">
+                  <span>Saturation</span>
+                  <strong id="saturationStat">--</strong>
+                </div>
+                <div class="stat-card">
+                  <span>Edge Energy</span>
+                  <strong id="edgeStat">--</strong>
+                </div>
+              </div>
+
+              <div class="palette-wrap">
+                <h3>Dominant Palette</h3>
+                <div id="paletteBar" class="palette-bar"></div>
+              </div>
+
+              <div class="analysis-block">
+                <h3>Object &amp; Scene Tags</h3>
+                <div id="tagCloud" class="tag-cloud"></div>
+              </div>
+
+              <div class="analysis-block">
+                <h3>Photo Storyline</h3>
+                <p id="storyText" class="story-text">
+                  The app will generate a scene description after analysis.
+                </p>
+              </div>
+            </section>
+
+          </div>
+        </section>
+      </div>
+
+      <aside class="side-column">
+        <section class="panel controls-panel">
+          <div class="panel-heading">
+            <h2>Music Controls</h2>
+            <button id="shuffleButton" class="button ghost" type="button" disabled>Variation</button>
+          </div>
+
+          <div class="controls-grid">
+            <label>
+              <span>Style Engine</span>
+              <select id="styleSelect">
+                <option value="aurora">Aurora</option>
+                <option value="neon">Neon Pulse</option>
+                <option value="organic">Organic Bloom</option>
+                <option value="cinematic">Cinematic Drift</option>
+              </select>
+            </label>
+
+            <label>
+              <span>Focus Region</span>
+              <select id="focusSelect">
+                <option value="full">Full Frame</option>
+                <option value="center">Center Crop</option>
+                <option value="top">Sky / Top</option>
+                <option value="bottom">Ground / Bottom</option>
+                <option value="left">Left Slice</option>
+                <option value="right">Right Slice</option>
+              </select>
+            </label>
+
+            <label>
+              <span>Scale Flavor</span>
+              <select id="scaleSelect">
+                <option value="auto">Auto</option>
+                <option value="major">Major Lift</option>
+                <option value="minor">Minor Glow</option>
+                <option value="dorian">Dorian Quest</option>
+                <option value="pentatonic">Pentatonic Flow</option>
+                <option value="lydian">Lydian Spark</option>
+              </select>
+            </label>
+
+            <label>
+              <span>Tempo Override</span>
+              <input id="tempoSlider" type="range" min="72" max="160" value="112" />
+              <small id="tempoSliderValue">112 BPM</small>
+            </label>
+
+            <label>
+              <span>Texture Amount</span>
+              <input id="textureSlider" type="range" min="0" max="100" value="58" />
+              <small id="textureSliderValue">58%</small>
+            </label>
+
+            <label>
+              <span>Scene Mutation</span>
+              <input id="mutationSlider" type="range" min="0" max="100" value="18" />
+              <small id="mutationSliderValue">18%</small>
+            </label>
+          </div>
+
+          <div class="transport-row">
+            <button id="saveButton" class="button ghost" type="button" disabled>Save Snapshot</button>
+            <button id="loadButton" class="button ghost" type="button">Load Snapshot</button>
+            <button id="reanalyzeButton" class="button ghost" type="button" disabled>Reanalyze</button>
+          </div>
+        </section>
+
+        <section class="panel visual-panel">
+          <div class="panel-heading">
+            <h2>Live Visualizer</h2>
+            <span id="sectionLabel">Intro</span>
+          </div>
+          <canvas id="visualizerCanvas" width="720" height="220"></canvas>
+          <div class="timeline" id="timeline"></div>
+        </section>
+
+      </aside>
+    </main>
+
+    <canvas id="analysisCanvas" width="320" height="320" hidden></canvas>
+  </body>
+</html>
