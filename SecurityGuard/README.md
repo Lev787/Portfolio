@@ -12,6 +12,7 @@ A simple browser-based Node.js app: opens a camera page, detects object movement
 - Plays a separate sound for each motion type.
 - Triggers a siren when the object moves back.
 - Includes a polished UI, event log, and sensitivity controls.
+- Includes optional toggles for alarm screenshots, night mode, object guessing, and a full detection timeline.
 
 ## How to Run
 

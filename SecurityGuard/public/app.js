@@ -65,13 +65,23 @@ const elements = {
   movementBadge: document.querySelector("#movementBadge"),
   hudMotionPercent: document.querySelector("#hudMotionPercent"),
   currentSoundLabel: document.querySelector("#currentSoundLabel"),
+  recognizedObject: document.querySelector("#recognizedObject"),
   sensitivityRange: document.querySelector("#sensitivityRange"),
   sensitivityValue: document.querySelector("#sensitivityValue"),
   cooldownRange: document.querySelector("#cooldownRange"),
   cooldownValue: document.querySelector("#cooldownValue"),
   volumeRange: document.querySelector("#volumeRange"),
   volumeValue: document.querySelector("#volumeValue"),
-  eventLog: document.querySelector("#eventLog")
+  autoScreenshotToggle: document.querySelector("#autoScreenshotToggle"),
+  nightModeToggle: document.querySelector("#nightModeToggle"),
+  recognitionToggle: document.querySelector("#recognitionToggle"),
+  fullTimelineToggle: document.querySelector("#fullTimelineToggle"),
+  screenshotCount: document.querySelector("#screenshotCount"),
+  timelineStatus: document.querySelector("#timelineStatus"),
+  eventLog: document.querySelector("#eventLog"),
+  timelinePanel: document.querySelector("#timelinePanel"),
+  timelineSummary: document.querySelector("#timelineSummary"),
+  timelineList: document.querySelector("#timelineList")
 };
 
 const overlayContext = elements.overlayCanvas.getContext("2d");
@@ -91,7 +101,9 @@ const state = {
   lastProcessedAt: 0,
   lastTriggerAt: 0,
   quietFrames: 0,
-  frameRequestId: null
+  frameRequestId: null,
+  screenshotCount: 0,
+  timelineEvents: []
 };
 
 function updateSliderLabels() {
@@ -113,18 +125,188 @@ function formatTime(date) {
   }).format(date);
 }
 
-function appendLog(type, strength) {
-  const meta = MOVEMENT_META[type] || MOVEMENT_META.unknown;
+function formatTimelineTime(date) {
+  return new Intl.DateTimeFormat("en-US", {
+    month: "short",
+    day: "numeric",
+    hour: "2-digit",
+    minute: "2-digit",
+    second: "2-digit"
+  }).format(date);
+}
+
+function getRecognitionIdleLabel() {
+  if (!elements.recognitionToggle.checked) {
+    return "Recognition off";
+  }
+
+  return state.running ? "Scanning..." : "Ready to scan";
+}
+
+function updateFeatureSummary() {
+  document.body.classList.toggle("night-mode-enabled", elements.nightModeToggle.checked);
+  elements.screenshotCount.textContent = `${state.screenshotCount} saved`;
+
+  if (!elements.fullTimelineToggle.checked) {
+    elements.timelineStatus.textContent = "Off";
+    elements.timelineSummary.textContent = "Disabled";
+    elements.timelineSummary.className = "movement-badge movement-idle";
+    elements.timelinePanel.classList.add("timeline-panel-hidden");
+    return;
+  }
+
+  elements.timelinePanel.classList.remove("timeline-panel-hidden");
+  elements.timelineStatus.textContent =
+    state.timelineEvents.length === 0 ? "Enabled" : `${state.timelineEvents.length} tracked`;
+  elements.timelineSummary.textContent =
+    state.timelineEvents.length === 0 ? "Enabled" : `${state.timelineEvents.length} events`;
+  elements.timelineSummary.className =
+    state.timelineEvents.length === 0
+      ? "movement-badge movement-idle"
+      : "movement-badge movement-active";
+}
+
+function renderTimeline() {
+  updateFeatureSummary();
+
+  if (!elements.fullTimelineToggle.checked) {
+    return;
+  }
+
+  if (state.timelineEvents.length === 0) {
+    elements.timelineList.innerHTML =
+      '<div class="timeline-empty">Timeline is enabled. Every new detection in this session will be recorded here.</div>';
+    return;
+  }
+
+  elements.timelineList.innerHTML = state.timelineEvents
+    .map((entry) => {
+      const meta = MOVEMENT_META[entry.type] || MOVEMENT_META.unknown;
+      const extraBits = [
+        `Intensity ${Math.round(entry.strength * 100)}%`,
+        `Sound ${meta.sound}`
+      ];
+
+      if (entry.objectLabel) {
+        extraBits.push(entry.objectLabel);
+      }
+
+      if (entry.screenshotSaved) {
+        extraBits.push("Screenshot saved");
+      }
+
+      return `
+        <article class="timeline-item">
+          <div class="timeline-item-top">
+            <strong style="color: ${meta.color};">${meta.label}</strong>
+            <time>${formatTimelineTime(entry.timestamp)}</time>
+          </div>
+          <div class="timeline-item-meta">${extraBits.join(" | ")}</div>
+        </article>
+      `;
+    })
+    .join("");
+}
+
+function createDetectionEntry(result, screenshotSaved) {
+  return {
+    timestamp: new Date(),
+    type: result.type,
+    strength: result.strength,
+    objectLabel: result.objectLabel || "",
+    screenshotSaved
+  };
+}
+
+function estimateObjectGuess(bounds, motionRatio) {
+  const areaRatio =
+    (bounds.width * bounds.height) / (PROCESSING_WIDTH * PROCESSING_HEIGHT);
+  const aspectRatio = bounds.width / Math.max(bounds.height, 1);
+
+  if (areaRatio > 0.24 || (aspectRatio > 1.55 && motionRatio > 0.08)) {
+    return "Possible vehicle";
+  }
+
+  if (bounds.height > bounds.width * 1.12 && areaRatio > 0.045) {
+    return "Possible person";
+  }
+
+  if (areaRatio < 0.085 || aspectRatio < 1.05) {
+    return "Possible pet";
+  }
+
+  return aspectRatio > 1.28 ? "Possible vehicle" : "Possible person";
+}
+
+function saveAlarmScreenshot(result) {
+  const width = elements.cameraFeed.videoWidth;
+  const height = elements.cameraFeed.videoHeight;
+
+  if (!width || !height) {
+    return false;
+  }
+
+  try {
+    const captureCanvas = document.createElement("canvas");
+    captureCanvas.width = width;
+    captureCanvas.height = height;
+    const captureContext = captureCanvas.getContext("2d");
+    const snapshotLabel = result.objectLabel
+      ? `${MOVEMENT_META[result.type].label} | ${result.objectLabel}`
+      : MOVEMENT_META[result.type].label;
+
+    captureContext.save();
+    captureContext.translate(width, 0);
+    captureContext.scale(-1, 1);
+    captureContext.drawImage(elements.cameraFeed, 0, 0, width, height);
+    captureContext.drawImage(elements.overlayCanvas, 0, 0, width, height);
+    captureContext.restore();
+
+    captureContext.fillStyle = "rgba(4, 16, 29, 0.8)";
+    captureContext.fillRect(18, 18, Math.min(width - 36, 430), 56);
+    captureContext.fillStyle = "#f5f7ff";
+    captureContext.font = '700 18px "Trebuchet MS", sans-serif';
+    captureContext.fillText("Security Guard alarm snapshot", 30, 41);
+    captureContext.font = '400 14px "Trebuchet MS", sans-serif';
+    captureContext.fillText(`${formatTimelineTime(new Date())} | ${snapshotLabel}`, 30, 63);
+
+    const link = document.createElement("a");
+    link.href = captureCanvas.toDataURL("image/png");
+    link.download = `security-guard-alarm-${new Date().toISOString().replace(/[:.]/g, "-")}.png`;
+    document.body.append(link);
+    link.click();
+    link.remove();
+
+    state.screenshotCount += 1;
+    updateFeatureSummary();
+    return true;
+  } catch (error) {
+    console.error("Screenshot save failed:", error);
+    return false;
+  }
+}
+
+function appendLog(entry) {
+  const meta = MOVEMENT_META[entry.type] || MOVEMENT_META.unknown;
   const item = document.createElement("article");
+  const details = [`Intensity: ${Math.round(entry.strength * 100)}%`, `Sound: ${meta.sound}`];
+
+  if (entry.objectLabel) {
+    details.push(entry.objectLabel);
+  }
+
+  if (entry.screenshotSaved) {
+    details.push("Screenshot saved");
+  }
 
   item.className = "event-log-item";
   item.innerHTML = `
     <div class="event-log-dot" style="color: ${meta.color}; background: ${meta.color};"></div>
     <div>
       <strong>${meta.label}</strong>
-      <span>Intensity: ${Math.round(strength * 100)}%. Sound: ${meta.sound}.</span>
+      <span>${details.join(". ")}.</span>
     </div>
-    <time>${formatTime(new Date())}</time>
+    <time>${formatTime(entry.timestamp)}</time>
   `;
 
   if (elements.eventLog.querySelector(".event-log-empty")) {
@@ -136,6 +318,16 @@ function appendLog(type, strength) {
   while (elements.eventLog.children.length > MAX_LOG_ITEMS) {
     elements.eventLog.lastElementChild.remove();
   }
+}
+
+function appendTimeline(entry) {
+  if (!elements.fullTimelineToggle.checked) {
+    updateFeatureSummary();
+    return;
+  }
+
+  state.timelineEvents.push(entry);
+  renderTimeline();
 }
 
 function setBadge(type) {
@@ -158,6 +350,8 @@ function updateReadout(result) {
   elements.motionStrength.textContent = `${Math.round(result.strength * 100)}%`;
   elements.hudMotionPercent.textContent = `${(result.motionRatio * 100).toFixed(1)}%`;
   elements.currentSoundLabel.textContent = meta.sound;
+  elements.recognizedObject.textContent =
+    result.type === "idle" ? getRecognitionIdleLabel() : result.objectLabel || getRecognitionIdleLabel();
   setBadge(result.type);
 }
 
@@ -305,6 +499,9 @@ function drawOverlay(result) {
   const width = result.bounds.width * scaleX;
   const height = result.bounds.height * scaleY;
   const meta = MOVEMENT_META[result.type] || MOVEMENT_META.unknown;
+  const overlayText = result.objectLabel
+    ? `${meta.label} - ${result.objectLabel}`
+    : meta.label;
 
   overlayContext.strokeStyle = meta.color;
   overlayContext.fillStyle = meta.color;
@@ -314,10 +511,15 @@ function drawOverlay(result) {
   overlayContext.strokeRect(x, y, width, height);
 
   overlayContext.shadowBlur = 0;
-  overlayContext.fillRect(x, Math.max(12, y - 32), Math.max(180, width * 0.62), 24);
+  overlayContext.fillRect(
+    x,
+    Math.max(12, y - 32),
+    Math.max(180, overlayText.length * 7.4),
+    24
+  );
   overlayContext.fillStyle = "#04101d";
   overlayContext.font = '700 14px "Trebuchet MS", sans-serif';
-  overlayContext.fillText(meta.label, x + 10, Math.max(29, y - 14));
+  overlayContext.fillText(overlayText, x + 10, Math.max(29, y - 14));
 }
 
 function resizeOverlay() {
@@ -500,6 +702,11 @@ function detectionLoop(timestamp) {
 
   state.lastProcessedAt = timestamp;
   const result = analyseMotion(extractGrayFrame());
+
+  if (elements.recognitionToggle.checked && result.type !== "idle" && result.bounds) {
+    result.objectLabel = estimateObjectGuess(result.bounds, result.motionRatio);
+  }
+
   updateReadout(result);
   drawOverlay(result);
 
@@ -509,7 +716,14 @@ function detectionLoop(timestamp) {
   if (result.type !== "idle" && enoughTimePassed) {
     state.lastTriggerAt = timestamp;
     playMovementSound(result.type, result.strength);
-    appendLog(result.type, result.strength);
+    const screenshotSaved =
+      result.type === "backward" && elements.autoScreenshotToggle.checked
+        ? saveAlarmScreenshot(result)
+        : false;
+    const entry = createDetectionEntry(result, screenshotSaved);
+
+    appendLog(entry);
+    appendTimeline(entry);
   }
 }
 
@@ -549,6 +763,7 @@ async function startSystem() {
 
     elements.systemStatus.textContent = "Guard is active";
     elements.currentSoundLabel.textContent = "System ready";
+    elements.recognizedObject.textContent = getRecognitionIdleLabel();
     elements.stopButton.disabled = false;
     window.requestAnimationFrame(detectionLoop);
   } catch (error) {
@@ -584,6 +799,7 @@ function stopSystem() {
   overlayContext.clearRect(0, 0, elements.overlayCanvas.width, elements.overlayCanvas.height);
   elements.systemStatus.textContent = "Guard stopped";
   elements.currentSoundLabel.textContent = "Standby";
+  elements.recognizedObject.textContent = getRecognitionIdleLabel();
   elements.motionType.textContent = MOVEMENT_META.idle.label;
   elements.motionStrength.textContent = "0%";
   elements.hudMotionPercent.textContent = "0.0%";
@@ -592,6 +808,16 @@ function stopSystem() {
   setBadge("idle");
   elements.startButton.disabled = false;
   elements.stopButton.disabled = true;
+}
+
+function handleFeatureToggleChange() {
+  if (!elements.fullTimelineToggle.checked) {
+    elements.timelineList.innerHTML = "";
+  }
+
+  elements.recognizedObject.textContent = getRecognitionIdleLabel();
+  renderTimeline();
+  updateFeatureSummary();
 }
 
 async function testSounds() {
@@ -620,6 +846,10 @@ async function testSounds() {
 elements.sensitivityRange.addEventListener("input", updateSliderLabels);
 elements.cooldownRange.addEventListener("input", updateSliderLabels);
 elements.volumeRange.addEventListener("input", updateSliderLabels);
+elements.autoScreenshotToggle.addEventListener("change", handleFeatureToggleChange);
+elements.nightModeToggle.addEventListener("change", handleFeatureToggleChange);
+elements.recognitionToggle.addEventListener("change", handleFeatureToggleChange);
+elements.fullTimelineToggle.addEventListener("change", handleFeatureToggleChange);
 elements.startButton.addEventListener("click", startSystem);
 elements.stopButton.addEventListener("click", stopSystem);
 elements.testSoundsButton.addEventListener("click", testSounds);
@@ -628,4 +858,7 @@ window.addEventListener("beforeunload", stopStreamTracks);
 
 updateSliderLabels();
 renderEmptyLog();
+renderTimeline();
+updateFeatureSummary();
+elements.recognizedObject.textContent = getRecognitionIdleLabel();
 setBadge("idle");

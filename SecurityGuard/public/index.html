@@ -81,6 +81,10 @@
                 <span class="hud-label">Sound</span>
                 <strong id="currentSoundLabel">Standby</strong>
               </div>
+              <div class="hud-item">
+                <span class="hud-label">Object Guess</span>
+                <strong id="recognizedObject">Recognition off</strong>
+              </div>
             </div>
           </div>
         </div>
@@ -139,6 +143,68 @@
             </div>
           </div>
 
+          <div class="feature-switches">
+            <div class="feature-switches-header">
+              <h3>Feature Switches</h3>
+              <span>Enable or disable extras</span>
+            </div>
+
+            <label class="toggle-row">
+              <div class="toggle-copy">
+                <strong>Auto Screenshot on Alarm</strong>
+                <span>Save a PNG whenever the backward alarm is triggered.</span>
+              </div>
+              <span class="toggle-control">
+                <input id="autoScreenshotToggle" class="toggle-input" type="checkbox" />
+                <span class="toggle-slider"></span>
+              </span>
+            </label>
+
+            <label class="toggle-row">
+              <div class="toggle-copy">
+                <strong>Night Mode Contrast</strong>
+                <span>Darken the view and boost contrast for low-light scenes.</span>
+              </div>
+              <span class="toggle-control">
+                <input id="nightModeToggle" class="toggle-input" type="checkbox" />
+                <span class="toggle-slider"></span>
+              </span>
+            </label>
+
+            <label class="toggle-row">
+              <div class="toggle-copy">
+                <strong>People / Pets / Vehicles</strong>
+                <span>Turn on heuristic object guessing for moving targets.</span>
+              </div>
+              <span class="toggle-control">
+                <input id="recognitionToggle" class="toggle-input" type="checkbox" />
+                <span class="toggle-slider"></span>
+              </span>
+            </label>
+
+            <label class="toggle-row">
+              <div class="toggle-copy">
+                <strong>Full Detection Timeline</strong>
+                <span>Keep every detection in a session-wide timeline panel.</span>
+              </div>
+              <span class="toggle-control">
+                <input id="fullTimelineToggle" class="toggle-input" type="checkbox" />
+                <span class="toggle-slider"></span>
+              </span>
+            </label>
+
+            <div class="feature-stats">
+              <div class="feature-stat">
+                <span>Alarm Shots</span>
+                <strong id="screenshotCount">0 saved</strong>
+              </div>
+              <div class="feature-stat">
+                <span>Timeline</span>
+                <strong id="timelineStatus">Off</strong>
+              </div>
+            </div>
+          </div>
+
           <div class="sound-map">
             <h3>Sound Map</h3>
             <div class="sound-map-item">
@@ -177,38 +243,17 @@
         </aside>
       </section>
 
-      <section class="feature-grid">
-        <article class="panel info-panel">
-          <p class="section-tag">How It Works</p>
-          <h2>What Is Already Built</h2>
-          <ul class="feature-list">
-            <li>Camera video capture directly in the browser.</li>
-            <li>Motion detection based on frame difference.</li>
-            <li>Direction detection: left, right, up, down.</li>
-            <li>Forward and backward estimation using motion area changes.</li>
-            <li>A separate sound for every motion type.</li>
-            <li>An alarm siren when the object moves back.</li>
-            <li>Overlay box and live status on top of the video.</li>
-            <li>Event log and adjustable sensitivity.</li>
-          </ul>
-        </article>
-
-        <article class="panel idea-panel">
-          <p class="section-tag">10 Cool Ideas</p>
-          <h2>What Could Be Added Next</h2>
-          <ol class="idea-list">
-            <li>Upload custom audio files instead of synthesized sounds.</li>
-            <li>Save a screenshot whenever the alarm is triggered.</li>
-            <li>Create multiple security zones with separate rules.</li>
-            <li>Send alerts to Telegram or email.</li>
-            <li>Add a night mode with stronger contrast.</li>
-            <li>Recognize people, pets, and vehicles.</li>
-            <li>Keep a full timeline of all detections.</li>
-            <li>Add password protection and user profiles.</li>
-            <li>Control the system remotely from a phone.</li>
-            <li>Enable automatic arming on a schedule.</li>
-          </ol>
-        </article>
+      <section id="timelinePanel" class="panel timeline-panel timeline-panel-hidden">
+        <div class="panel-heading">
+          <div>
+            <p class="section-tag">Timeline</p>
+            <h2>Full Detection Timeline</h2>
+          </div>
+          <span id="timelineSummary" class="movement-badge movement-idle">
+            Disabled
+          </span>
+        </div>
+        <div id="timelineList" class="timeline-list"></div>
       </section>
     </main>
 
