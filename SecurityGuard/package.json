@@ -1,0 +1,9 @@
+{
+  "name": "security-guard-browser",
+  "version": "1.0.0",
+  "description": "Browser-based Security Guard app with webcam motion detection and sounds.",
+  "private": true,
+  "scripts": {
+    "start": "node server.js"
+  }
+}

@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Security Guard</title>
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <div class="background-glow background-glow-left"></div>
+    <div class="background-glow background-glow-right"></div>
+
+    <main class="app-shell">
+      <section class="hero panel">
+        <div class="hero-copy">
+          <p class="eyebrow">Node.js Browser App</p>
+          <h1>Security Guard</h1>
+          <p class="hero-text">
+            This browser app uses your camera, tracks object movement, and
+            plays a unique sound for each motion type. If the object moves
+            back, an alarm siren is triggered.
+          </p>
+
+          <div class="hero-actions">
+            <button id="startButton" class="button button-primary">
+              Enable Camera
+            </button>
+            <button id="stopButton" class="button button-secondary" disabled>
+              Stop Guard
+            </button>
+            <button id="testSoundsButton" class="button button-ghost">
+              Test Sounds
+            </button>
+          </div>
+        </div>
+
+        <div class="hero-status">
+          <div class="status-card">
+            <span class="status-label">Status</span>
+            <strong id="systemStatus">Waiting to start</strong>
+          </div>
+          <div class="status-card">
+            <span class="status-label">Last Movement</span>
+            <strong id="motionType">No motion</strong>
+          </div>
+          <div class="status-card">
+            <span class="status-label">Intensity</span>
+            <strong id="motionStrength">0%</strong>
+          </div>
+        </div>
+      </section>
+
+      <section class="dashboard">
+        <div class="panel monitor-panel">
+          <div class="panel-heading">
+            <div>
+              <p class="section-tag">Live Monitor</p>
+              <h2>Camera & Detection Zone</h2>
+            </div>
+            <span id="movementBadge" class="movement-badge movement-idle">
+              No motion
+            </span>
+          </div>
+
+          <div class="monitor-frame">
+            <video
+              id="cameraFeed"
+              class="camera-feed"
+              autoplay
+              muted
+              playsinline
+            ></video>
+            <canvas id="overlayCanvas" class="overlay-canvas"></canvas>
+
+            <div class="monitor-hud">
+              <div class="hud-item">
+                <span class="hud-label">Motion</span>
+                <strong id="hudMotionPercent">0.0%</strong>
+              </div>
+              <div class="hud-item">
+                <span class="hud-label">Sound</span>
+                <strong id="currentSoundLabel">Standby</strong>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <aside class="panel control-panel">
+          <div class="panel-heading">
+            <div>
+              <p class="section-tag">Controls</p>
+              <h2>System Settings</h2>
+            </div>
+          </div>
+
+          <div class="control-group">
+            <label for="sensitivityRange">Sensitivity</label>
+            <input
+              id="sensitivityRange"
+              type="range"
+              min="25"
+              max="90"
+              value="60"
+            />
+            <div class="control-meta">
+              <span>Lower = fewer false triggers</span>
+              <strong id="sensitivityValue">60</strong>
+            </div>
+          </div>
+
+          <div class="control-group">
+            <label for="cooldownRange">Delay Between Sounds</label>
+            <input
+              id="cooldownRange"
+              type="range"
+              min="250"
+              max="1800"
+              step="50"
+              value="700"
+            />
+            <div class="control-meta">
+              <span>Prevents endless sound repetition</span>
+              <strong id="cooldownValue">700 ms</strong>
+            </div>
+          </div>
+
+          <div class="control-group">
+            <label for="volumeRange">Volume</label>
+            <input
+              id="volumeRange"
+              type="range"
+              min="0"
+              max="100"
+              value="55"
+            />
+            <div class="control-meta">
+              <span>Synthesized alert volume</span>
+              <strong id="volumeValue">55%</strong>
+            </div>
+          </div>
+
+          <div class="sound-map">
+            <h3>Sound Map</h3>
+            <div class="sound-map-item">
+              <span>Left</span>
+              <strong>Low sweep</strong>
+            </div>
+            <div class="sound-map-item">
+              <span>Right</span>
+              <strong>High rise</strong>
+            </div>
+            <div class="sound-map-item">
+              <span>Up</span>
+              <strong>Bright ping</strong>
+            </div>
+            <div class="sound-map-item">
+              <span>Down</span>
+              <strong>Falling tone</strong>
+            </div>
+            <div class="sound-map-item">
+              <span>Forward</span>
+              <strong>Approach pulse</strong>
+            </div>
+            <div class="sound-map-item sound-map-item-alert">
+              <span>Backward</span>
+              <strong>Alarm siren</strong>
+            </div>
+          </div>
+
+          <div class="event-log-wrap">
+            <div class="event-log-header">
+              <h3>Event Log</h3>
+              <span>Last 8</span>
+            </div>
+            <div id="eventLog" class="event-log"></div>
+          </div>
+        </aside>
+      </section>
+
+      <section class="feature-grid">
+        <article class="panel info-panel">
+          <p class="section-tag">How It Works</p>
+          <h2>What Is Already Built</h2>
+          <ul class="feature-list">
+            <li>Camera video capture directly in the browser.</li>
+            <li>Motion detection based on frame difference.</li>
+            <li>Direction detection: left, right, up, down.</li>
+            <li>Forward and backward estimation using motion area changes.</li>
+            <li>A separate sound for every motion type.</li>
+            <li>An alarm siren when the object moves back.</li>
+            <li>Overlay box and live status on top of the video.</li>
+            <li>Event log and adjustable sensitivity.</li>
+          </ul>
+        </article>
+
+        <article class="panel idea-panel">
+          <p class="section-tag">10 Cool Ideas</p>
+          <h2>What Could Be Added Next</h2>
+          <ol class="idea-list">
+            <li>Upload custom audio files instead of synthesized sounds.</li>
+            <li>Save a screenshot whenever the alarm is triggered.</li>
+            <li>Create multiple security zones with separate rules.</li>
+            <li>Send alerts to Telegram or email.</li>
+            <li>Add a night mode with stronger contrast.</li>
+            <li>Recognize people, pets, and vehicles.</li>
+            <li>Keep a full timeline of all detections.</li>
+            <li>Add password protection and user profiles.</li>
+            <li>Control the system remotely from a phone.</li>
+            <li>Enable automatic arming on a schedule.</li>
+          </ol>
+        </article>
+      </section>
+    </main>
+
+    <script src="./app.js" defer></script>
+  </body>
+</html>
