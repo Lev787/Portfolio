@@ -1,0 +1,28 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 600" role="img" aria-labelledby="title2 desc2">
+  <title id="title2">Sketch cat two</title>
+  <desc id="desc2">A mint-and-cream cat portrait with sleepy eyes.</desc>
+  <defs>
+    <linearGradient id="bg2" x1="0%" x2="100%" y1="0%" y2="100%">
+      <stop offset="0%" stop-color="#e4f6ef"/>
+      <stop offset="100%" stop-color="#cbe9ec"/>
+    </linearGradient>
+  </defs>
+  <rect width="800" height="600" fill="url(#bg2)"/>
+  <rect x="40" y="48" width="120" height="22" rx="11" fill="#ffffff" opacity="0.55"/>
+  <rect x="96" y="92" width="84" height="16" rx="8" fill="#ffffff" opacity="0.55"/>
+  <path d="M250 165 L325 50 L380 208 Z" fill="#4c908d"/>
+  <path d="M550 165 L475 50 L420 208 Z" fill="#4c908d"/>
+  <path d="M400 505 C274 505 175 404 175 292 C175 170 278 92 400 92 C522 92 625 170 625 292 C625 404 526 505 400 505 Z" fill="#77c6c5"/>
+  <path d="M315 210 C335 197 362 195 384 206 C363 226 335 226 315 210 Z" fill="#f9fffb"/>
+  <path d="M485 210 C465 197 438 195 416 206 C437 226 465 226 485 210 Z" fill="#f9fffb"/>
+  <path d="M315 242 C335 233 362 233 384 242" fill="none" stroke="#214447" stroke-linecap="round" stroke-width="9"/>
+  <path d="M416 242 C438 233 465 233 485 242" fill="none" stroke="#214447" stroke-linecap="round" stroke-width="9"/>
+  <path d="M388 290 C397 279 403 279 412 290 C407 307 393 307 388 290 Z" fill="#ef8f95"/>
+  <path d="M350 330 C375 365 425 365 450 330" fill="none" stroke="#214447" stroke-linecap="round" stroke-width="8"/>
+  <path d="M255 286 C315 296 348 299 386 301" fill="none" stroke="#214447" stroke-linecap="round" stroke-width="6"/>
+  <path d="M545 286 C485 296 452 299 414 301" fill="none" stroke="#214447" stroke-linecap="round" stroke-width="6"/>
+  <path d="M255 322 C320 322 350 325 386 331" fill="none" stroke="#214447" stroke-linecap="round" stroke-width="6"/>
+  <path d="M545 322 C480 322 450 325 414 331" fill="none" stroke="#214447" stroke-linecap="round" stroke-width="6"/>
+  <circle cx="615" cy="470" r="45" fill="#ffffff" opacity="0.4"/>
+  <circle cx="672" cy="430" r="20" fill="#ffffff" opacity="0.55"/>
+</svg>

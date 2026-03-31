@@ -1,0 +1,30 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 600" role="img" aria-labelledby="title1 desc1">
+  <title id="title1">Sketch cat one</title>
+  <desc id="desc1">A handmade orange cat portrait with playful shapes.</desc>
+  <defs>
+    <linearGradient id="bg1" x1="0%" x2="100%" y1="0%" y2="100%">
+      <stop offset="0%" stop-color="#ffe9c4"/>
+      <stop offset="100%" stop-color="#ffd1b0"/>
+    </linearGradient>
+  </defs>
+  <rect width="800" height="600" fill="url(#bg1)"/>
+  <circle cx="650" cy="120" r="60" fill="#fff7e8" opacity="0.9"/>
+  <path d="M250 160 L330 40 L390 210 Z" fill="#d7753f"/>
+  <path d="M550 160 L470 40 L410 210 Z" fill="#d7753f"/>
+  <path d="M400 500 C280 500 180 400 180 290 C180 170 280 90 400 90 C520 90 620 170 620 290 C620 400 520 500 400 500 Z" fill="#ef8f56"/>
+  <path d="M305 235 C305 215 325 200 350 200 C375 200 395 215 395 235 C395 258 375 275 350 275 C325 275 305 258 305 235 Z" fill="#fff7ef"/>
+  <path d="M405 235 C405 215 425 200 450 200 C475 200 495 215 495 235 C495 258 475 275 450 275 C425 275 405 258 405 235 Z" fill="#fff7ef"/>
+  <circle cx="350" cy="238" r="12" fill="#233b39"/>
+  <circle cx="450" cy="238" r="12" fill="#233b39"/>
+  <circle cx="345" cy="233" r="4" fill="#ffffff"/>
+  <circle cx="445" cy="233" r="4" fill="#ffffff"/>
+  <path d="M390 285 L410 285 L400 305 Z" fill="#d96e75"/>
+  <path d="M360 325 C380 350 420 350 440 325" fill="none" stroke="#233b39" stroke-linecap="round" stroke-width="8"/>
+  <path d="M260 285 C315 295 350 300 385 302" fill="none" stroke="#233b39" stroke-linecap="round" stroke-width="6"/>
+  <path d="M540 285 C485 295 450 300 415 302" fill="none" stroke="#233b39" stroke-linecap="round" stroke-width="6"/>
+  <path d="M260 320 C320 322 352 325 384 330" fill="none" stroke="#233b39" stroke-linecap="round" stroke-width="6"/>
+  <path d="M540 320 C480 322 448 325 416 330" fill="none" stroke="#233b39" stroke-linecap="round" stroke-width="6"/>
+  <path d="M255 355 C320 350 350 348 385 345" fill="none" stroke="#233b39" stroke-linecap="round" stroke-width="6"/>
+  <path d="M545 355 C480 350 450 348 415 345" fill="none" stroke="#233b39" stroke-linecap="round" stroke-width="6"/>
+  <ellipse cx="400" cy="408" rx="115" ry="56" fill="#f6b08b" opacity="0.65"/>
+</svg>

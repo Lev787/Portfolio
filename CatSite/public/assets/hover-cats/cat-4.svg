@@ -1,0 +1,29 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 600" role="img" aria-labelledby="title4 desc4">
+  <title id="title4">Sketch cat four</title>
+  <desc id="desc4">A fluffy violet-gray cat portrait with star details.</desc>
+  <defs>
+    <linearGradient id="bg4" x1="0%" x2="100%" y1="0%" y2="100%">
+      <stop offset="0%" stop-color="#efe7ff"/>
+      <stop offset="100%" stop-color="#dcd2f4"/>
+    </linearGradient>
+  </defs>
+  <rect width="800" height="600" fill="url(#bg4)"/>
+  <path d="M110 88 L120 110 L144 112 L126 128 L132 152 L110 139 L88 152 L94 128 L76 112 L100 110 Z" fill="#ffffff" opacity="0.7"/>
+  <path d="M660 92 L668 108 L686 110 L672 122 L676 140 L660 131 L644 140 L648 122 L634 110 L652 108 Z" fill="#ffffff" opacity="0.7"/>
+  <path d="M245 165 L322 44 L384 212 Z" fill="#6a5f90"/>
+  <path d="M555 165 L478 44 L416 212 Z" fill="#6a5f90"/>
+  <path d="M400 510 C270 510 165 404 165 292 C165 164 274 86 400 86 C526 86 635 164 635 292 C635 404 530 510 400 510 Z" fill="#988ac2"/>
+  <ellipse cx="348" cy="236" rx="46" ry="38" fill="#fffafc"/>
+  <ellipse cx="452" cy="236" rx="46" ry="38" fill="#fffafc"/>
+  <circle cx="348" cy="236" r="13" fill="#302744"/>
+  <circle cx="452" cy="236" r="13" fill="#302744"/>
+  <circle cx="343" cy="230" r="4" fill="#ffffff"/>
+  <circle cx="447" cy="230" r="4" fill="#ffffff"/>
+  <path d="M392 289 C397 282 403 282 408 289 L400 304 Z" fill="#f09cb0"/>
+  <path d="M352 332 C382 365 418 365 448 332" fill="none" stroke="#302744" stroke-linecap="round" stroke-width="8"/>
+  <path d="M255 285 C315 297 348 301 388 302" fill="none" stroke="#302744" stroke-linecap="round" stroke-width="6"/>
+  <path d="M545 285 C485 297 452 301 412 302" fill="none" stroke="#302744" stroke-linecap="round" stroke-width="6"/>
+  <path d="M255 322 C320 324 350 326 388 332" fill="none" stroke="#302744" stroke-linecap="round" stroke-width="6"/>
+  <path d="M545 322 C480 324 450 326 412 332" fill="none" stroke="#302744" stroke-linecap="round" stroke-width="6"/>
+  <path d="M295 395 C350 438 450 438 505 395" fill="none" stroke="#7b6ea2" stroke-linecap="round" stroke-width="16"/>
+</svg>

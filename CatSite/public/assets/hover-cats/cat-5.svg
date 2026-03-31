@@ -1,0 +1,29 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 600" role="img" aria-labelledby="title5 desc5">
+  <title id="title5">Sketch cat five</title>
+  <desc id="desc5">A sandy cat portrait with a tiny fish companion.</desc>
+  <defs>
+    <linearGradient id="bg5" x1="0%" x2="100%" y1="0%" y2="100%">
+      <stop offset="0%" stop-color="#fff3d4"/>
+      <stop offset="100%" stop-color="#ffdca5"/>
+    </linearGradient>
+  </defs>
+  <rect width="800" height="600" fill="url(#bg5)"/>
+  <path d="M664 468 C694 450 722 450 748 468 C722 486 694 486 664 468 Z" fill="#6dc7c0"/>
+  <circle cx="736" cy="468" r="4" fill="#264544"/>
+  <path d="M664 468 L646 455 L646 481 Z" fill="#59b0a8"/>
+  <path d="M248 165 L330 34 L392 210 Z" fill="#c58a42"/>
+  <path d="M552 165 L470 34 L408 210 Z" fill="#c58a42"/>
+  <path d="M400 506 C276 506 174 404 174 294 C174 170 280 88 400 88 C520 88 626 170 626 294 C626 404 524 506 400 506 Z" fill="#efb45b"/>
+  <path d="M315 210 C334 196 363 196 385 210 C367 225 333 225 315 210 Z" fill="#fff8ea"/>
+  <path d="M485 210 C466 196 437 196 415 210 C433 225 467 225 485 210 Z" fill="#fff8ea"/>
+  <path d="M325 244 C340 232 360 232 375 244" fill="none" stroke="#3f3427" stroke-linecap="round" stroke-width="9"/>
+  <path d="M425 244 C440 232 460 232 475 244" fill="none" stroke="#3f3427" stroke-linecap="round" stroke-width="9"/>
+  <path d="M392 286 C397 280 403 280 408 286 L400 304 Z" fill="#e38c94"/>
+  <path d="M352 330 C382 360 418 360 448 330" fill="none" stroke="#3f3427" stroke-linecap="round" stroke-width="8"/>
+  <path d="M260 286 C316 295 348 299 387 301" fill="none" stroke="#3f3427" stroke-linecap="round" stroke-width="6"/>
+  <path d="M540 286 C484 295 452 299 413 301" fill="none" stroke="#3f3427" stroke-linecap="round" stroke-width="6"/>
+  <path d="M260 322 C320 324 352 326 387 331" fill="none" stroke="#3f3427" stroke-linecap="round" stroke-width="6"/>
+  <path d="M540 322 C480 324 448 326 413 331" fill="none" stroke="#3f3427" stroke-linecap="round" stroke-width="6"/>
+  <path d="M288 148 C340 174 460 174 512 148" fill="none" stroke="#d69a4f" stroke-linecap="round" stroke-width="12"/>
+  <ellipse cx="400" cy="413" rx="112" ry="58" fill="#ffd59d" opacity="0.62"/>
+</svg>

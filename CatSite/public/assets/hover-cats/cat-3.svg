@@ -1,0 +1,28 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 600" role="img" aria-labelledby="title3 desc3">
+  <title id="title3">Sketch cat three</title>
+  <desc id="desc3">A striped charcoal cat portrait with bright eyes.</desc>
+  <defs>
+    <linearGradient id="bg3" x1="0%" x2="100%" y1="0%" y2="100%">
+      <stop offset="0%" stop-color="#f4efe7"/>
+      <stop offset="100%" stop-color="#dcd6cf"/>
+    </linearGradient>
+  </defs>
+  <rect width="800" height="600" fill="url(#bg3)"/>
+  <path d="M250 170 L330 35 L398 220 Z" fill="#4f5d69"/>
+  <path d="M550 170 L470 35 L402 220 Z" fill="#4f5d69"/>
+  <path d="M400 505 C275 505 175 405 175 292 C175 168 280 88 400 88 C520 88 625 168 625 292 C625 405 525 505 400 505 Z" fill="#7e8e99"/>
+  <path d="M315 195 C328 175 352 165 378 168" fill="none" stroke="#34424c" stroke-linecap="round" stroke-width="12"/>
+  <path d="M485 195 C472 175 448 165 422 168" fill="none" stroke="#34424c" stroke-linecap="round" stroke-width="12"/>
+  <path d="M330 232 C330 205 350 185 375 185 C400 185 420 205 420 232 C420 258 400 278 375 278 C350 278 330 258 330 232 Z" fill="#e8f5a8"/>
+  <path d="M380 232 C380 205 400 185 425 185 C450 185 470 205 470 232 C470 258 450 278 425 278 C400 278 380 258 380 232 Z" fill="#e8f5a8"/>
+  <circle cx="375" cy="232" r="14" fill="#26333c"/>
+  <circle cx="425" cy="232" r="14" fill="#26333c"/>
+  <path d="M390 286 L410 286 L400 305 Z" fill="#d67f88"/>
+  <path d="M352 332 C382 358 418 358 448 332" fill="none" stroke="#26333c" stroke-linecap="round" stroke-width="9"/>
+  <path d="M272 286 C320 293 352 297 388 301" fill="none" stroke="#26333c" stroke-linecap="round" stroke-width="6"/>
+  <path d="M528 286 C480 293 448 297 412 301" fill="none" stroke="#26333c" stroke-linecap="round" stroke-width="6"/>
+  <path d="M265 322 C322 324 356 327 388 331" fill="none" stroke="#26333c" stroke-linecap="round" stroke-width="6"/>
+  <path d="M535 322 C478 324 444 327 412 331" fill="none" stroke="#26333c" stroke-linecap="round" stroke-width="6"/>
+  <path d="M340 116 C370 142 430 142 460 116" fill="none" stroke="#34424c" stroke-linecap="round" stroke-width="10"/>
+  <path d="M320 145 C365 175 435 175 480 145" fill="none" stroke="#34424c" stroke-linecap="round" stroke-width="10"/>
+</svg>

@@ -1,0 +1,14 @@
+{
+  "name": "cat-atlas",
+  "version": "1.0.0",
+  "private": true,
+  "description": "A memorable cat explorer built with Node.js and The Cat API.",
+  "type": "commonjs",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node --watch server.js"
+  },
+  "engines": {
+    "node": ">=18"
+  }
+}
