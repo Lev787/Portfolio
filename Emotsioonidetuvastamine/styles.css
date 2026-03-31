@@ -1,0 +1,397 @@
+:root {
+  color-scheme: dark;
+  --bg-main: linear-gradient(135deg, #1a2238 0%, #0d1321 55%, #05070d 100%);
+  --bg-glow-1: rgba(119, 157, 255, 0.35);
+  --bg-glow-2: rgba(111, 255, 213, 0.2);
+  --text-main: #f8f4ec;
+  --text-muted: rgba(248, 244, 236, 0.72);
+  --panel-bg: rgba(8, 12, 24, 0.62);
+  --panel-border: rgba(255, 255, 255, 0.12);
+  --chip-bg: rgba(255, 255, 255, 0.1);
+  --accent: #8fb3ff;
+  --shadow-color: rgba(3, 6, 15, 0.45);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  min-height: 100%;
+}
+
+body {
+  margin: 0;
+  font-family: "Trebuchet MS", "Segoe UI Variable", "Segoe UI", sans-serif;
+  color: var(--text-main);
+  background: var(--bg-main);
+  transition:
+    background 700ms ease,
+    color 300ms ease;
+  overflow-x: hidden;
+}
+
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  background:
+    radial-gradient(circle at 20% 20%, rgba(255, 255, 255, 0.05), transparent 28%),
+    radial-gradient(circle at 80% 10%, rgba(255, 255, 255, 0.04), transparent 24%),
+    linear-gradient(rgba(255, 255, 255, 0.02) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.02) 1px, transparent 1px);
+  background-size: auto, auto, 34px 34px, 34px 34px;
+  pointer-events: none;
+}
+
+.background-glow {
+  position: fixed;
+  width: 32rem;
+  height: 32rem;
+  border-radius: 50%;
+  filter: blur(58px);
+  opacity: 0.8;
+  pointer-events: none;
+  transition: background-color 700ms ease;
+}
+
+.background-glow-left {
+  top: -8rem;
+  left: -10rem;
+  background: var(--bg-glow-1);
+}
+
+.background-glow-right {
+  right: -10rem;
+  bottom: -10rem;
+  background: var(--bg-glow-2);
+}
+
+.app-shell {
+  position: relative;
+  z-index: 1;
+  width: min(1120px, calc(100% - 2rem));
+  margin: 0 auto;
+  padding: 2rem 0 3rem;
+}
+
+.hero-panel {
+  max-width: 42rem;
+  margin-bottom: 1.75rem;
+}
+
+.eyebrow {
+  margin: 0 0 0.65rem;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.18em;
+  font-size: 0.82rem;
+}
+
+h1 {
+  margin: 0;
+  font-size: clamp(2.8rem, 6vw, 5.4rem);
+  line-height: 0.95;
+  font-family: "Aptos Display", "Gill Sans", "Trebuchet MS", sans-serif;
+  letter-spacing: -0.05em;
+}
+
+.hero-copy {
+  margin: 1rem 0 1.2rem;
+  max-width: 38rem;
+  color: var(--text-muted);
+  font-size: 1.02rem;
+  line-height: 1.65;
+}
+
+.status-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.55rem;
+  padding: 0.7rem 1rem;
+  border-radius: 999px;
+  background: var(--chip-bg);
+  border: 1px solid var(--panel-border);
+  backdrop-filter: blur(16px);
+  box-shadow: 0 1.25rem 2.5rem -1.5rem var(--shadow-color);
+  font-size: 0.95rem;
+}
+
+.camera-button {
+  margin-top: 1rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 3.2rem;
+  padding: 0.85rem 1.35rem;
+  border: 0;
+  border-radius: 999px;
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.92), rgba(215, 249, 255, 0.78));
+  color: #09111f;
+  font: inherit;
+  font-weight: 700;
+  cursor: pointer;
+  box-shadow: 0 1.4rem 2.8rem -1.6rem var(--shadow-color);
+  transition:
+    transform 180ms ease,
+    box-shadow 180ms ease,
+    opacity 180ms ease;
+}
+
+.camera-button:hover:not(:disabled) {
+  transform: translateY(-1px);
+  box-shadow: 0 1.6rem 3rem -1.5rem var(--shadow-color);
+}
+
+.camera-button:active:not(:disabled) {
+  transform: translateY(0);
+}
+
+.camera-button:disabled {
+  cursor: wait;
+  opacity: 0.72;
+}
+
+.status-chip::before {
+  content: "";
+  width: 0.7rem;
+  height: 0.7rem;
+  border-radius: 50%;
+  background: var(--accent);
+  box-shadow: 0 0 0.9rem var(--accent);
+}
+
+.content-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1.4fr) minmax(280px, 0.85fr);
+  gap: 1.25rem;
+  align-items: start;
+}
+
+.camera-card,
+.info-card {
+  background: var(--panel-bg);
+  border: 1px solid var(--panel-border);
+  border-radius: 28px;
+  backdrop-filter: blur(18px);
+  box-shadow: 0 1.8rem 3.6rem -2rem var(--shadow-color);
+}
+
+.camera-card {
+  padding: 1.15rem;
+}
+
+.camera-frame {
+  position: relative;
+  aspect-ratio: 16 / 10;
+  min-height: 360px;
+  overflow: hidden;
+  border-radius: 22px;
+  background:
+    radial-gradient(circle at top, rgba(255, 255, 255, 0.08), transparent 45%),
+    linear-gradient(140deg, rgba(255, 255, 255, 0.1), rgba(8, 12, 24, 0.96));
+}
+
+#camera {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transform: scaleX(-1);
+  display: block;
+}
+
+.camera-scan {
+  position: absolute;
+  inset: auto 0 12%;
+  height: 3px;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.15), var(--accent), rgba(255, 255, 255, 0.15), transparent);
+  box-shadow: 0 0 20px var(--accent);
+  animation: scan 4.2s linear infinite;
+}
+
+.camera-guides {
+  position: absolute;
+  inset: 1rem;
+  border-radius: 18px;
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  mask:
+    linear-gradient(#000 0 0) content-box,
+    linear-gradient(#000 0 0);
+  mask-composite: exclude;
+  padding: 1rem;
+}
+
+.camera-hint {
+  margin: 1rem 0 0;
+  color: var(--text-muted);
+  line-height: 1.55;
+}
+
+.info-card {
+  padding: 1.25rem;
+  display: grid;
+  gap: 1rem;
+}
+
+.emotion-card,
+.confidence-card,
+.scores-card {
+  border-radius: 22px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: rgba(255, 255, 255, 0.04);
+  padding: 1rem 1rem 1.05rem;
+}
+
+.card-label {
+  display: inline-block;
+  margin-bottom: 0.55rem;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  font-size: 0.74rem;
+}
+
+#emotion-name {
+  display: block;
+  font-size: clamp(1.8rem, 3vw, 2.55rem);
+  line-height: 1;
+}
+
+#emotion-description {
+  margin: 0.8rem 0 0;
+  color: var(--text-muted);
+  line-height: 1.55;
+}
+
+.confidence-head,
+.score-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1rem;
+}
+
+.confidence-track {
+  width: 100%;
+  height: 12px;
+  margin-top: 0.9rem;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.08);
+  overflow: hidden;
+}
+
+#confidence-bar {
+  display: block;
+  width: 0%;
+  height: 100%;
+  border-radius: inherit;
+  background: linear-gradient(90deg, rgba(255, 255, 255, 0.4), var(--accent));
+  transition: width 300ms ease;
+}
+
+.scores-card {
+  display: grid;
+  gap: 0.85rem;
+}
+
+.score-row strong {
+  font-variant-numeric: tabular-nums;
+}
+
+.theme-waiting {
+  --bg-main: linear-gradient(135deg, #1c2541 0%, #0d1b2a 55%, #071019 100%);
+  --bg-glow-1: rgba(111, 157, 255, 0.35);
+  --bg-glow-2: rgba(84, 255, 212, 0.2);
+  --accent: #8fb3ff;
+}
+
+.theme-joy {
+  --bg-main: linear-gradient(135deg, #6c2d00 0%, #d95d1f 40%, #ffb703 100%);
+  --bg-glow-1: rgba(255, 198, 69, 0.48);
+  --bg-glow-2: rgba(255, 113, 67, 0.34);
+  --accent: #ffe082;
+  --panel-bg: rgba(54, 20, 3, 0.46);
+}
+
+.theme-sadness {
+  --bg-main: linear-gradient(135deg, #0b132b 0%, #1c2541 40%, #2d6a8b 100%);
+  --bg-glow-1: rgba(110, 168, 255, 0.34);
+  --bg-glow-2: rgba(65, 120, 226, 0.3);
+  --accent: #8bd3ff;
+  --panel-bg: rgba(6, 15, 34, 0.54);
+}
+
+.theme-neutral {
+  --bg-main: linear-gradient(135deg, #23395b 0%, #406e8e 45%, #8ea8c3 100%);
+  --bg-glow-1: rgba(180, 214, 255, 0.26);
+  --bg-glow-2: rgba(82, 199, 184, 0.22);
+  --accent: #d7f9ff;
+  --panel-bg: rgba(18, 35, 54, 0.5);
+}
+
+.theme-anger {
+  --bg-main: linear-gradient(135deg, #2b0608 0%, #7f0909 45%, #d62828 100%);
+  --bg-glow-1: rgba(255, 104, 104, 0.42);
+  --bg-glow-2: rgba(255, 37, 37, 0.28);
+  --accent: #ffb3b3;
+  --panel-bg: rgba(39, 8, 11, 0.52);
+}
+
+.theme-error {
+  --bg-main: linear-gradient(135deg, #22191a 0%, #3f2631 50%, #65404b 100%);
+  --bg-glow-1: rgba(255, 160, 160, 0.18);
+  --bg-glow-2: rgba(255, 207, 169, 0.15);
+  --accent: #ffd0c4;
+}
+
+@keyframes scan {
+  0% {
+    transform: translateY(-220px);
+    opacity: 0;
+  }
+
+  10%,
+  90% {
+    opacity: 1;
+  }
+
+  100% {
+    transform: translateY(220px);
+    opacity: 0;
+  }
+}
+
+@media (max-width: 920px) {
+  .content-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 640px) {
+  .app-shell {
+    width: min(100% - 1rem, 1120px);
+    padding-top: 1rem;
+  }
+
+  .hero-panel {
+    margin-bottom: 1.2rem;
+  }
+
+  .camera-card,
+  .info-card {
+    border-radius: 22px;
+  }
+
+  .camera-card {
+    padding: 0.85rem;
+  }
+
+  .camera-frame {
+    min-height: 280px;
+  }
+
+  .info-card {
+    padding: 0.85rem;
+  }
+}

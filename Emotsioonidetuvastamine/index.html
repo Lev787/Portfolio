@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Emotion Detector</title>
+  <link rel="preconnect" href="https://cdn.jsdelivr.net">
+  <link rel="stylesheet" href="styles.css">
+  <script defer src="https://cdn.jsdelivr.net/npm/face-api.js@0.22.2/dist/face-api.min.js"></script>
+  <script defer src="app.js"></script>
+</head>
+<body class="theme-waiting">
+  <div class="background-glow background-glow-left"></div>
+  <div class="background-glow background-glow-right"></div>
+
+  <main class="app-shell">
+    <section class="hero-panel">
+      <p class="eyebrow">Camera-Powered Web App</p>
+      <h1>Emotion Detector</h1>
+      <p class="hero-copy">
+        This app uses your webcam, detects facial emotion, and changes the entire background based on the result.
+      </p>
+      <div class="status-chip" id="app-state">Starting...</div>
+      <button class="camera-button" id="start-camera" type="button">Turn On Camera</button>
+    </section>
+
+    <section class="content-grid">
+      <div class="camera-card">
+        <div class="camera-frame">
+          <video id="camera" autoplay playsinline muted></video>
+          <div class="camera-scan" aria-hidden="true"></div>
+          <div class="camera-guides" aria-hidden="true"></div>
+        </div>
+        <p class="camera-hint">
+          Allow camera access and face the screen directly. Best results come with good lighting.
+        </p>
+      </div>
+
+      <aside class="info-card">
+        <div class="emotion-card">
+          <span class="card-label">Detected Emotion</span>
+          <strong id="emotion-name">Neutral</strong>
+          <p id="emotion-description">Waiting for camera input and model loading.</p>
+        </div>
+
+        <div class="confidence-card">
+          <div class="confidence-head">
+            <span class="card-label">Confidence</span>
+            <strong id="confidence-value">0%</strong>
+          </div>
+          <div class="confidence-track" aria-hidden="true">
+            <span id="confidence-bar"></span>
+          </div>
+        </div>
+
+        <div class="scores-card">
+          <div class="score-row">
+            <span>Joy</span>
+            <strong data-score="joy">0%</strong>
+          </div>
+          <div class="score-row">
+            <span>Sadness</span>
+            <strong data-score="sadness">0%</strong>
+          </div>
+          <div class="score-row">
+            <span>Neutral</span>
+            <strong data-score="neutral">0%</strong>
+          </div>
+          <div class="score-row">
+            <span>Anger</span>
+            <strong data-score="anger">0%</strong>
+          </div>
+        </div>
+      </aside>
+    </section>
+  </main>
+</body>
+</html>
