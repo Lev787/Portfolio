@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <base href="./public/" />
+    <title>Star Wars Databank Command Console</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700;800&family=Space+Grotesk:wght@400;500;700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="./styles.css" />
+    <script src="./catalog-snapshot.js" defer></script>
+    <script src="./app.js" defer></script>
+  </head>
+  <body data-theme="aurora">
+    <div class="page-noise" aria-hidden="true"></div>
+    <main class="shell">
+      <section class="hero panel">
+        <div class="hero__copy">
+          <p class="eyebrow">Node.js + External API</p>
+          <h1>Star Wars Databank Command Console</h1>
+          <p class="hero__lede">
+            A cinematic archive deck that pulls live data from the Star Wars Databank API and turns it into
+            collectible mission cards.
+          </p>
+
+          <div class="hero__actions">
+            <button class="btn btn--primary" id="randomBtn" type="button">Hyperspace Surprise</button>
+            <button class="btn btn--ghost" id="themeBtn" type="button">Switch Theme</button>
+          </div>
+
+          <div class="stat-ribbon" id="statsBar" aria-live="polite"></div>
+        </div>
+
+        <aside class="spotlight panel panel--inner" id="spotlightPanel" aria-live="polite">
+          <div class="spotlight__loading">
+            <p class="eyebrow">Spotlight</p>
+            <h2>Initializing mission deck...</h2>
+            <p>The first live card will appear here after the archive sync is complete.</p>
+          </div>
+        </aside>
+      </section>
+
+      <section class="systems panel">
+        <div class="section-heading">
+          <p class="eyebrow">Unforgettable Systems</p>
+          <h2>Five interactive features requested by the brief</h2>
+        </div>
+        <div class="systems__grid" id="featureGrid"></div>
+      </section>
+
+      <section class="controls panel">
+        <div class="controls__top">
+          <label class="field">
+            <span class="field__label">Search the archive</span>
+            <input id="searchInput" type="search" placeholder="Try droid, Anakin, tank..." autocomplete="off" />
+          </label>
+
+          <label class="field field--compact">
+            <span class="field__label">Sort cards</span>
+            <select id="sortSelect">
+              <option value="featured">Featured order</option>
+              <option value="name">Name A-Z</option>
+              <option value="lore">Longest lore first</option>
+              <option value="custom">Custom droids first</option>
+            </select>
+          </label>
+        </div>
+
+        <div class="controls__bottom">
+          <div class="toggle">
+            <input id="favoritesOnly" type="checkbox" />
+            <label for="favoritesOnly">Favorites only</label>
+          </div>
+
+          <div class="tabs" id="categoryTabs" aria-label="Category filters"></div>
+
+          <div class="statusline" id="statusLine"></div>
+        </div>
+      </section>
+
+      <section class="feed" id="feed"></section>
+    </main>
+  </body>
+</html>

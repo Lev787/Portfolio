@@ -1,0 +1,44 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 480 620" fill="none">
+  <defs>
+    <linearGradient id="bg" x1="52" y1="28" x2="414" y2="580" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#041B2B" />
+      <stop offset="1" stop-color="#091018" />
+    </linearGradient>
+    <linearGradient id="body" x1="170" y1="126" x2="300" y2="446" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#79F3FF" />
+      <stop offset="1" stop-color="#1A79A5" />
+    </linearGradient>
+    <radialGradient id="glow" cx="0" cy="0" r="1" gradientUnits="userSpaceOnUse" gradientTransform="translate(241 420) rotate(90) scale(164 144)">
+      <stop stop-color="#66E0FF" stop-opacity=".45" />
+      <stop offset="1" stop-color="#66E0FF" stop-opacity="0" />
+    </radialGradient>
+  </defs>
+  <rect width="480" height="620" rx="34" fill="url(#bg)" />
+  <circle cx="70" cy="70" r="2" fill="#DDFBFF" />
+  <circle cx="118" cy="132" r="2" fill="#DDFBFF" />
+  <circle cx="402" cy="76" r="2" fill="#FFF1C8" />
+  <circle cx="376" cy="162" r="3" fill="#DDFBFF" />
+  <ellipse cx="240" cy="450" rx="160" ry="120" fill="url(#glow)" />
+  <g transform="translate(88 78)">
+    <path d="M152 18 238 68 152 118 66 68 152 18Z" fill="#162B3C" stroke="#81F5FF" stroke-width="10" />
+    <circle cx="126" cy="68" r="18" fill="#0A1118" stroke="#FFD48B" stroke-width="10" />
+    <circle cx="178" cy="68" r="18" fill="#0A1118" stroke="#FFD48B" stroke-width="10" />
+    <path d="M122 112h60v24c0 14-11 26-24 26h-12c-13 0-24-12-24-26v-24Z" fill="#F6A84B" />
+    <rect x="98" y="154" width="108" height="170" rx="34" fill="url(#body)" stroke="#D4FDFF" stroke-width="10" />
+    <rect x="123" y="184" width="58" height="18" rx="9" fill="#F9FBFF" fill-opacity=".85" />
+    <rect x="116" y="222" width="72" height="18" rx="9" fill="#0C2440" />
+    <rect x="126" y="256" width="52" height="18" rx="9" fill="#0C2440" />
+    <rect x="36" y="182" width="56" height="22" rx="11" fill="#F5A84B" />
+    <rect x="212" y="182" width="56" height="22" rx="11" fill="#F5A84B" />
+    <rect x="46" y="196" width="34" height="104" rx="16" fill="#8DEBF7" />
+    <rect x="224" y="196" width="34" height="104" rx="16" fill="#8DEBF7" />
+    <rect x="42" y="288" width="42" height="34" rx="12" fill="#142434" />
+    <rect x="220" y="288" width="42" height="34" rx="12" fill="#142434" />
+    <rect x="118" y="324" width="24" height="90" rx="12" fill="#D7F8FF" />
+    <rect x="162" y="324" width="24" height="90" rx="12" fill="#D7F8FF" />
+    <rect x="96" y="404" width="54" height="24" rx="12" fill="#F8B45E" />
+    <rect x="154" y="404" width="54" height="24" rx="12" fill="#F8B45E" />
+    <circle cx="72" cy="352" r="24" fill="#11283C" stroke="#79F3FF" stroke-width="10" />
+    <circle cx="236" cy="352" r="24" fill="#11283C" stroke="#79F3FF" stroke-width="10" />
+  </g>
+</svg>

@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 600" fill="none">
+  <defs>
+    <linearGradient id="bg" x1="56" y1="48" x2="742" y2="552" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#19143A" />
+      <stop offset="1" stop-color="#091018" />
+    </linearGradient>
+    <radialGradient id="glow" cx="0" cy="0" r="1" gradientUnits="userSpaceOnUse" gradientTransform="translate(622 136) rotate(90) scale(188 214)">
+      <stop stop-color="#BFAEFF" stop-opacity=".56" />
+      <stop offset="1" stop-color="#BFAEFF" stop-opacity="0" />
+    </radialGradient>
+  </defs>
+  <rect width="800" height="600" rx="36" fill="url(#bg)" />
+  <rect x="48" y="48" width="704" height="504" rx="28" fill="rgba(255,255,255,.04)" stroke="rgba(255,255,255,.16)" />
+  <ellipse cx="622" cy="136" rx="188" ry="214" fill="url(#glow)" />
+  <path d="M142 348 332 238h110l140 84-86 28H232l-90-2Z" fill="#BFAEFF" fill-opacity=".18" stroke="#D9CFFF" stroke-width="12" />
+  <path d="M250 350h84l64 54H210l40-54Z" fill="#74DCFF" fill-opacity=".3" />
+  <circle cx="264" cy="422" r="26" fill="#0A1019" stroke="#D9CFFF" stroke-width="10" />
+  <circle cx="430" cy="422" r="26" fill="#0A1019" stroke="#D9CFFF" stroke-width="10" />
+  <text x="96" y="118" fill="rgba(255,255,255,.76)" font-family="Segoe UI, Arial, sans-serif" font-size="24" letter-spacing="6">LOCAL VEHICLE POSTER</text>
+  <text x="96" y="202" fill="#F8FBFF" font-family="Segoe UI, Arial, sans-serif" font-size="64" font-weight="700">VEHICLES</text>
+  <text x="96" y="274" fill="rgba(255,255,255,.82)" font-family="Segoe UI, Arial, sans-serif" font-size="28">Reliable offline art for walkers, racers, tanks, and transports.</text>
+  <text x="96" y="318" fill="rgba(255,255,255,.82)" font-family="Segoe UI, Arial, sans-serif" font-size="28">Each card still keeps its own name and databank description.</text>
+</svg>

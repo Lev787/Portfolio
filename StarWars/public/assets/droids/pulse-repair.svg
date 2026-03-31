@@ -1,0 +1,38 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 480 620" fill="none">
+  <defs>
+    <linearGradient id="bg" x1="32" y1="44" x2="422" y2="588" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#0A1E1A" />
+      <stop offset="1" stop-color="#091018" />
+    </linearGradient>
+    <linearGradient id="body" x1="162" y1="124" x2="304" y2="456" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#F8FCFF" />
+      <stop offset="1" stop-color="#7BD4B5" />
+    </linearGradient>
+    <radialGradient id="glow" cx="0" cy="0" r="1" gradientUnits="userSpaceOnUse" gradientTransform="translate(240 438) rotate(90) scale(162 140)">
+      <stop stop-color="#74FFD1" stop-opacity=".42" />
+      <stop offset="1" stop-color="#74FFD1" stop-opacity="0" />
+    </radialGradient>
+  </defs>
+  <rect width="480" height="620" rx="34" fill="url(#bg)" />
+  <ellipse cx="240" cy="448" rx="164" ry="122" fill="url(#glow)" />
+  <g transform="translate(90 70)">
+    <ellipse cx="150" cy="54" rx="96" ry="54" fill="#EFFCF8" fill-opacity=".16" stroke="#98FFE2" stroke-width="10" />
+    <circle cx="120" cy="54" r="20" fill="#13262A" stroke="#8FFFF1" stroke-width="10" />
+    <circle cx="180" cy="54" r="20" fill="#13262A" stroke="#8FFFF1" stroke-width="10" />
+    <rect x="132" y="98" width="36" height="32" rx="12" fill="#74FFD1" />
+    <rect x="92" y="136" width="116" height="184" rx="38" fill="url(#body)" stroke="#E3FFFA" stroke-width="10" />
+    <rect x="122" y="174" width="56" height="18" rx="9" fill="#12302E" />
+    <rect x="112" y="206" width="76" height="18" rx="9" fill="#12302E" />
+    <rect x="122" y="238" width="56" height="18" rx="9" fill="#12302E" />
+    <path d="M44 176c0-17 13-30 30-30h8c17 0 30 13 30 30v44H44v-44Z" fill="#9CF1E5" />
+    <path d="M188 176c0-17 13-30 30-30h8c17 0 30 13 30 30v44h-68v-44Z" fill="#9CF1E5" />
+    <rect x="56" y="214" width="34" height="118" rx="17" fill="#F6FBFF" />
+    <rect x="210" y="214" width="34" height="118" rx="17" fill="#F6FBFF" />
+    <path d="M58 330h30l20 58H72l-14-44v-14Z" fill="#7BD4B5" />
+    <path d="M242 330h-30l-20 58h36l14-44v-14Z" fill="#7BD4B5" />
+    <rect x="124" y="320" width="20" height="122" rx="10" fill="#F6FBFF" />
+    <rect x="156" y="320" width="20" height="122" rx="10" fill="#F6FBFF" />
+    <rect x="102" y="430" width="56" height="24" rx="12" fill="#9CF1E5" />
+    <rect x="142" y="430" width="56" height="24" rx="12" fill="#9CF1E5" />
+  </g>
+</svg>
